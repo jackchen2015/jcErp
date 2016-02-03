@@ -5,7 +5,6 @@
 
 package prj.ui.user;
 
-import com.hongxin.omc.ui.common.NodeIndex;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;

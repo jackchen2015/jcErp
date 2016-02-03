@@ -13,13 +13,11 @@ package prj.ui.user;
 import com.hongxin.component.ComponentUtil;
 import com.hongxin.component.export.TableModelRecordSet;
 import com.hongxin.component.privilege.PrivilegeController;
-import com.hongxin.saf.AsynBlockTask;
 import com.hongxin.saf.SingleFrameApplication;
 
 import com.hongxin.util.GUIUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentListener;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
@@ -130,10 +127,10 @@ public class UserManage extends javax.swing.JPanel
 	private void initialize()
 	{
 		// 权限控制
-		PrivilegeController.checkPrivilege(this.getClass(), this, this);
-		onUserIcon = rm.getIcon("user.online.icon");
-		offUserIcon = rm.getIcon("user.offline.icon");
-		userGroupIcon = rm.getIcon("userGroup.icon");
+//		PrivilegeController.checkPrivilege(this.getClass(), this, this);
+//		onUserIcon = rm.getIcon("user.online.icon");
+//		offUserIcon = rm.getIcon("user.offline.icon");
+//		userGroupIcon = rm.getIcon("userGroup.icon");
 		// 获得用户组、用户信息
 		getAllUserInfo();
 		// 文档事件

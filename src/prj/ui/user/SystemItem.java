@@ -2,7 +2,7 @@
  * Copyright 2009 Hongxin Telecommunication Technologies Co, Ltd.,
  * Wuhan, Hubei, China. All rights reserved.
  */
-package com.hongxin.omc.protocol;
+package prj.ui.user;
 
 /**
  * 系统字典表表项数据对象。

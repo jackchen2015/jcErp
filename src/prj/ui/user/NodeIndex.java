@@ -3,7 +3,7 @@
  * Wuhan, Hubei, China. All rights reserved.
  */
 
-package com.hongxin.omc.ui.common;
+package prj.ui.user;
 
 /**
  * 节点索引类。

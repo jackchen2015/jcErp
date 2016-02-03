@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 import javax.swing.BorderFactory;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -38,6 +39,8 @@ import prj.ui.ObjectDetailsPanel;
 import prj.ui.RtSceneSTPanel;
 import prj.ui.StylePartPanel;
 import prj.ui.WorkLevelPanel;
+import prj.ui.user.UserManage;
+import prj.ui.user.UserModule;
 import prj.user.UserPurview;
 import util.Constants;
 import util.GUIUtil;
@@ -784,6 +787,7 @@ public class PrjView extends SingleFrameView {
         jMenuItem49.setName("jMenuItem49"); // NOI18N
         jMenu7.add(jMenuItem49);
 
+        jMenuItem2.setAction(actionMap.get("userManage")); // NOI18N
         jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
         jMenuItem2.setName("jMenuItem2"); // NOI18N
         jMenu7.add(jMenuItem2);
@@ -1204,6 +1208,20 @@ public class PrjView extends SingleFrameView {
 		javax.swing.JMenuItem menu =
 				(javax.swing.JMenuItem)event.getSource();
 		menu.setSelected(true);
+	}
+
+	@Action
+	public void userManage()
+	{
+		try
+		{
+			UserModule um = ServiceLoader.load(UserModule.class).iterator().next();
+			um.showUserMgmt();
+		}
+		catch(Exception exp)
+		{
+			exp.printStackTrace();
+		}
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
