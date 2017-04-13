@@ -1,0 +1,218 @@
+/*
+ * Copyright 2010 Hongxin Telecommunication Technologies Co, Ltd.,
+ * Wuhan, Hubei, China. All rights reserved.
+ */
+
+/*
+ * UserStatusPane.java
+ *
+ * Created on 2011-8-30, 18:27:52
+ */
+package prj;
+
+//import com.hongxin.omc.operation.UserSession;
+//import com.hongxin.omc.ui.services.FrameService;
+//import com.hongxin.omc.ui.services.ServiceConstants;
+//import com.hongxin.omc.util.DateUtil;
+//import com.hongxin.util.service.ServiceUtils;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.Beans;
+import java.util.Date;
+import javax.swing.UIManager;
+import net.java.balloontip.CustomBalloonTip;
+import net.java.balloontip.positioners.BalloonTipPositioner;
+import net.java.balloontip.positioners.Left_Above_Positioner;
+import net.java.balloontip.styles.BalloonTipStyle;
+import net.java.balloontip.styles.EdgedBalloonStyle;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
+import util.DateUtil;
+
+/**
+ * 用户状态面板。
+ * @author fanhuigang
+ */
+public class UserStatusPane extends org.jdesktop.swingx.JXPanel
+{
+	private ResourceMap resourceMap;
+	private BalloonTipStyle balloonTipStyle;
+	/**
+	 * 登录时间。
+	 */
+	private Date loginTime;
+	/**
+	 * 标签组件。
+	 */
+	private CustomBalloonTip balloonTip;	
+	
+	/** Creates new form UserStatusPane */
+	public UserStatusPane()
+	{
+		initComponents();
+		if(!Beans.isDesignTime())
+		{
+			initialize();
+		}
+	}
+	
+	/**
+	 * 初始化操作。
+	 */
+	private void initialize()
+	{
+		resourceMap = Application.getInstance().getContext().getResourceMap(UserStatusPane.class);
+		loginTime = new Date(System.currentTimeMillis());
+		lblUserInfo.setText(resourceMap.getString("login.info",
+				PrjApp.getApplication().getLogonUser(), 
+				DateUtil.formatDate(DateUtil.FK_YMD_HM, loginTime)));
+		addMouseListener(new UserStatusMouseListener());
+	}
+	
+	@Override
+	public void removeNotify()
+	{
+		if(balloonTip != null)
+		{
+			balloonTip.setVisible(false);
+		}
+		try
+		{
+			super.removeNotify();
+		}
+		catch(Exception exp)
+		{}
+	}
+	
+	/**
+	 * 获取标签组件。
+	 * @return 标签组件
+	 */
+	private CustomBalloonTip getBalloonTip()
+	{
+		if(balloonTip == null)
+		{
+			// 标签组件
+//			FrameService frameService =
+//					(FrameService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_FRAME);
+			balloonTip = new CustomBalloonTip(this, "", null, getBalloonTipStyle(),
+					getBalloonTipPositioner(), false);
+		}
+		return balloonTip;
+	}
+
+	public BalloonTipStyle getBalloonTipStyle()
+	{
+		if(balloonTipStyle == null)
+		{
+			//Color bgColor = OmcPreferences.getInstance().getColor("oa.label.background", Color.yellow);
+			Color bgColor = UIManager.getColor("ToolTip.background");
+			Color fgColor = Color.black;
+			float alpha = 0.8f;
+			bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), Math.round(alpha * 255f));
+			fgColor = new Color(fgColor.getRed(), fgColor.getGreen(), fgColor.getBlue(), Math.round(alpha * 255f));
+			balloonTipStyle = new EdgedBalloonStyle(bgColor, fgColor);
+			//balloonTipStyle = new ModernBalloonStyle(10, 10, bgColor, bgColor, fgColor);
+			//((ModernBalloonStyle)balloonTipStyle).enableAntiAliasing(true);
+		}
+		return balloonTipStyle;
+	}
+
+	public BalloonTipPositioner getBalloonTipPositioner()
+	{
+		// 定位器不能共享使用
+		return new Left_Above_Positioner(20, 20);
+	}	
+	
+	/**
+	 * 更新标签信息。
+	 * @param event 鼠标事件对象
+	 */
+	private void updateBalloonTip(MouseEvent event)
+	{
+		// 计算标签显示文本
+		StringBuilder sbd = new StringBuilder();
+		sbd.append("<html>").append("<table cellspacing=0 cellpadding=0>");
+		
+		sbd.append("<tr><td>");
+		sbd.append(resourceMap.getString("msg.name"));
+		sbd.append("</td><td><b>");
+		sbd.append(PrjApp.getApplication().getLogonUser());
+		sbd.append("</b></td></tr>");
+		
+		sbd.append("<tr><td>");
+		sbd.append(resourceMap.getString("msg.time"));
+		sbd.append("</td><td><b>");
+		sbd.append(DateUtil.formatDate(DateUtil.FK_YMD_HM, loginTime));
+		sbd.append("</b></td></tr>");
+		
+		sbd.append("<tr><td>");
+		sbd.append(resourceMap.getString("msg.last"));
+		sbd.append("</td><td><b>");
+		sbd.append(DateUtil.seconds2time(System.currentTimeMillis() - loginTime.getTime()));
+		sbd.append("</b></td></tr>");
+		
+		sbd.append("</table></html>");
+		getBalloonTip().setText(sbd.toString());
+		// 设置标签显示位置
+		getBalloonTip().setOffset(new Rectangle(event.getX(), event.getY(), 10, 10));
+	}
+	
+	/**
+	 * 用户状态界面鼠标事件监听器。
+	 */
+	private class UserStatusMouseListener extends MouseAdapter
+	{
+		@Override
+		public void mouseEntered(MouseEvent e)
+		{
+			// 显示标签
+			updateBalloonTip(e);
+			getBalloonTip().setVisible(true);
+		}
+		
+		@Override
+		public void mouseExited(MouseEvent e)
+		{
+			// 隐藏标签
+			getBalloonTip().setVisible(false);
+		}
+	}
+
+	/** This method is called from within the constructor to
+	 * initialize the form.
+	 * WARNING: Do NOT modify this code. The content of this method is
+	 * always regenerated by the Form Editor.
+	 */
+	@SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents()
+    {
+
+        lblUserInfo = new org.jdesktop.swingx.JXLabel();
+
+        setOpaque(false);
+
+        lblUserInfo.setForeground(new java.awt.Color(0, 0, 255));
+        lblUserInfo.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        lblUserInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/prj/user/resources/user16x16.png"))); // NOI18N
+        lblUserInfo.setText("jXLabel1");
+        lblUserInfo.setName("lblUserInfo"); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblUserInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblUserInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.jdesktop.swingx.JXLabel lblUserInfo;
+    // End of variables declaration//GEN-END:variables
+}
