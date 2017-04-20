@@ -112,6 +112,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="dptItem">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="showDptInfo" methodName="showDptInfo"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="dptItem.text"/>
                 <Property name="name" type="java.lang.String" value="dptItem" noResource="true"/>
               </Properties>

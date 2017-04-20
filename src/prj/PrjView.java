@@ -13,6 +13,7 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import prj.ui.DptPanel;
 
 /**
  * The application's main frame.
@@ -196,6 +197,8 @@ public class PrjView extends FrameView {
         sysMenu.setText(resourceMap.getString("sysMenu.text")); // NOI18N
         sysMenu.setName("sysMenu"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(PrjView.class, this);
+        dptItem.setAction(actionMap.get("showDptInfo")); // NOI18N
         dptItem.setText(resourceMap.getString("dptItem.text")); // NOI18N
         dptItem.setName("dptItem"); // NOI18N
         sysMenu.add(dptItem);
@@ -244,7 +247,6 @@ public class PrjView extends FrameView {
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(PrjView.class, this);
         aboutMenuItem.setAction(actionMap.get("showAboutBox")); // NOI18N
         aboutMenuItem.setText(resourceMap.getString("aboutMenuItem.text")); // NOI18N
         aboutMenuItem.setName("aboutMenuItem"); // NOI18N
@@ -481,6 +483,13 @@ public class PrjView extends FrameView {
         setStatusBar(jXStatusBar1);
         setToolBar(jToolBar1);
     }// </editor-fold>//GEN-END:initComponents
+
+	@Action
+	public void showDptInfo()
+	{
+		DptPanel panel = new DptPanel();
+		panel.showDialog();
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem dptItem;
