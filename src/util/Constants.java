@@ -17,6 +17,7 @@ public class Constants
 	public final static String CONF_STYLEPART = "CONF_STYLEPART";
 	public final static String CONF_WORKCENTER = "CONF_WORKCENTER";
 	public final static String CONF_WORKTYPESET = "CONF_WORKTYPESET";
+	public final static String CONF_WORKLEVELSET = "CONF_WORKLEVELSET";
 
 	public final static String USER_USER = "USER_USER";
 	public final static String USER_ROLE = "USER_ROLE";

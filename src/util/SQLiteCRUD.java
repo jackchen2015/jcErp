@@ -41,23 +41,32 @@ public class SQLiteCRUD {
      * @param params 多个字段值 
      * @return boolean  
      */    
-    public boolean insert(String table, String[] params){    
-        Statement stmt = null ;    
-        String sql = "insert into " + table  + " values('";    
-        for(int i = 0 ; i < params.length ;i++){    
-            if(i == (params.length - 1)){    
+    public boolean insert(String table, String[] fields, String[] params){    
+        Statement stmt = null ;
+		String fs = "";
+		for(String field:fields)
+		{
+			fs += field+",";
+		}
+		if(fields.length>0)
+		{
+			fs = fs.substring(0, fs.length()-1);
+		}
+        String sql = "insert into " + table +"(" +fs+")" + " values('";
+        for(int i = 0 ; i < params.length ;i++){
+            if(i == (params.length - 1)){
                 sql += (params[i] + "');") ;    
             }else{    
                 sql += (params[i] + "', '") ;    
             }    
         }    
         System.out.println(sql);    
-        try{    
+        try{
             stmt = this.connection.createStatement() ;    
             stmt.executeUpdate(sql) ;  
-            if(!connection.isClosed()){  
-                connection.close();  
-            }  
+//            if(!connection.isClosed()){  
+//                connection.close();  
+//            }  
             return true ;    
         }catch (Exception e) {    
             System.out.println("" + table + ": " + e.getLocalizedMessage());    
@@ -158,6 +167,34 @@ public class SQLiteCRUD {
 			Logger.getLogger(SQLiteCRUD.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return result;
+	}
+	
+	public int getMaxID(String tableName)
+	{
+		Statement stmt = null ;
+		ResultSet rs =  null;
+		String sql = "select max(id) as id from "+ tableName;
+        try{
+            stmt = this.connection.createStatement();
+            rs = stmt.executeQuery(sql);
+        }catch (Exception e) {
+            System.out.println( e.getLocalizedMessage());    
+            connectionRollback(connection) ;    
+            return 0; 
+        }
+		int maxId = 0;
+		try
+		{
+			if(rs.next())
+			{
+				maxId = rs.getInt("id");
+			}
+		}
+		catch(SQLException ex)
+		{
+			Logger.getLogger(SQLiteCRUD.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return maxId;
 	}
       
     private void connectionRollback(Connection connection){    

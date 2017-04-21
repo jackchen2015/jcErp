@@ -5,10 +5,17 @@
  */
 package prj.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.application.Action;
 import org.jdesktop.application.SingleFrameApplication;
 import prj.PrjApp;
+import util.Constants;
+import util.SQLiteCRUD;
+import util.SwingUtil;
 
 /**
  *
@@ -18,6 +25,8 @@ public class StylePartPanel extends javax.swing.JPanel
 {
 
 	private JDialog dialog;
+	private List<List> result;
+	private int selId = -1;
 	/**
 	 * Creates new form DptPanel
 	 */
@@ -41,6 +50,7 @@ public class StylePartPanel extends javax.swing.JPanel
 				dialog.dispose();
 			}
 		});
+		initTable();
 		dialog.pack();
 		dialog.setLocationRelativeTo(PrjApp.getApplication().getMainFrame());
 		dialog.setVisible(true);
@@ -65,6 +75,7 @@ public class StylePartPanel extends javax.swing.JPanel
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        idKey = new javax.swing.JLabel();
 
         setName("Form"); // NOI18N
 
@@ -73,14 +84,11 @@ public class StylePartPanel extends javax.swing.JPanel
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String []
             {
-                "编号", "部件名称"
+                "ID", "编号", "部件名称"
             }
         ));
         jTable1.setName("jTable1"); // NOI18N
@@ -97,17 +105,25 @@ public class StylePartPanel extends javax.swing.JPanel
 
         jTextField2.setName("jTextField2"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(StylePartPanel.class, this);
+        jButton1.setAction(actionMap.get("add")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
+        jButton2.setAction(actionMap.get("modify")); // NOI18N
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
+        jButton3.setAction(actionMap.get("delete")); // NOI18N
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        jButton4.setAction(actionMap.get("closeAction")); // NOI18N
         jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
         jButton4.setName("jButton4"); // NOI18N
+
+        idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
+        idKey.setName("idKey"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -134,12 +150,18 @@ public class StylePartPanel extends javax.swing.JPanel
                     .addComponent(jButton3)
                     .addComponent(jButton4))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(idKey)
+                .addGap(136, 136, 136))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(idKey)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
@@ -151,17 +173,18 @@ public class StylePartPanel extends javax.swing.JPanel
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel2)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton2))))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel idKey;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -173,4 +196,89 @@ public class StylePartPanel extends javax.swing.JPanel
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+	private void initTable()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		result = sqlOpt.select(Constants.CONF_STYLEPART, new String[]{"id", "number", "name"});
+		DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+		SwingUtil.hideColumn(jTable1, 0);
+		for(List l:result)
+		{
+			tm.addRow(l.toArray());	
+		}
+	}
+
+	@Action
+	public void closeAction()
+	{
+		dialog.dispose();
+	}
+
+	@Action
+	public void add()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		String[] data = new String[]{jTextField1.getText(), jTextField2.getText()};
+		boolean isSucc = sqlOpt.insert(Constants.CONF_STYLEPART, new String[]{"number", "name"}, data);
+		if(isSucc)
+		{
+			int maxId = sqlOpt.getMaxID(Constants.CONF_STYLEPART);
+			data = new String[]{""+maxId, jTextField1.getText(), jTextField2.getText()};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			tm.addRow(data);
+			result.add(Arrays.asList(data));
+			selId = -1;
+		}
+	}
+
+	@Action
+	public void modify()
+	{
+		String ids = idKey.getText();
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择款式部件，双击选择需要修改的款式部件!");
+			return;
+		}
+		String number = jTextField1.getText();
+		String name = jTextField2.getText();
+		if(number.equals("")||name.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, "款式部件编号，款式部件名称不合法!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.update(Constants.CONF_STYLEPART, idKey.getText(), "id", new String[]{"number", "name"}, 
+				new String[]{number, name});
+		if(isSucc)
+		{
+			String[] data = new String[]{ids, number, name};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.setValueAt(number, modelIndex, 1);
+			tm.setValueAt(name, modelIndex, 2);
+			result.set(modelIndex, Arrays.asList(data));
+		}		
+	}
+
+	@Action
+	public void delete()
+	{
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择款式部件，双击选择需要删除的款式部件!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.delete(Constants.CONF_STYLEPART, "id", idKey.getText());
+		if(isSucc)
+		{
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.removeRow(modelIndex);
+			result.remove(modelIndex);
+		}
+	}
+
 }

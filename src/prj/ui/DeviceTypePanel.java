@@ -5,9 +5,11 @@
  */
 package prj.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.jdesktop.application.Action;
@@ -27,6 +29,7 @@ public class DeviceTypePanel extends javax.swing.JPanel
 	private JDialog dialog;
 	
 	private List<List> result;
+	private int selId = -1;
 	/**
 	 * Creates new form DptPanel
 	 */
@@ -40,7 +43,7 @@ public class DeviceTypePanel extends javax.swing.JPanel
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setName(getName());
 		dialog.add(this);
-		dialog.setTitle("编号设备种类");
+		dialog.setTitle("衣车设备种类");
 
 		dialog.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -84,16 +87,19 @@ public class DeviceTypePanel extends javax.swing.JPanel
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String []
             {
-                "ID", "编号", "设备种类"
+                "id", "编号", "设备名称"
             }
-        ));
+        )
+        {
+            public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        });
         jTable1.setName("jTable1"); // NOI18N
         jTable1.addMouseListener(new java.awt.event.MouseAdapter()
         {
@@ -204,8 +210,8 @@ public class DeviceTypePanel extends javax.swing.JPanel
 		if(javax.swing.SwingUtilities.isLeftMouseButton(evt) 
 			&& evt.getClickCount() == 2)
 		{
-			int idx = jTable1.getSelectedRow();
-			int modelIndex = jTable1.convertRowIndexToModel(idx);
+			selId = jTable1.getSelectedRow();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
 			List<String> rowd = result.get(modelIndex);
 			idKey.setText(rowd.get(0));
 			jTextField1.setText(rowd.get(1));
@@ -216,29 +222,73 @@ public class DeviceTypePanel extends javax.swing.JPanel
 	@Action
 	public void closeAction()
 	{
-		this.setVisible(false);
+		dialog.dispose();
 	}
 
 	@Action
 	public void add()
 	{
 		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
-		sqlOpt.insert(Constants.CONF_DEVICETYPE, new String[]{jTextField1.getText(), jTextField2.getText()});
+		String[] data = new String[]{jTextField1.getText(), jTextField2.getText()};
+		boolean isSucc = sqlOpt.insert(Constants.CONF_DEVICETYPE, new String[]{"number", "deviceName"}, data);
+		if(isSucc)
+		{
+			int maxId = sqlOpt.getMaxID(Constants.CONF_DEVICETYPE);
+			data = new String[]{""+maxId, jTextField1.getText(), jTextField2.getText()};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			tm.addRow(data);
+			result.add(Arrays.asList(data));
+			selId = -1;
+		}
 	}
 
 	@Action
 	public void modify()
 	{
+		String ids = idKey.getText();
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择设备类型，双击选择需要修改的设备类型!");
+			return;
+		}
+		String number = jTextField1.getText();
+		String deviceName = jTextField2.getText();
+		if(number.equals("")||deviceName.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, "设备编号，设备名称不合法!");
+			return;
+		}
 		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
-		sqlOpt.update(Constants.CONF_DEVICETYPE, idKey.getText(), "id", new String[]{"number", "deviceName"}, 
-				new String[]{jTextField1.getText(), jTextField2.getText()});
+		boolean isSucc = sqlOpt.update(Constants.CONF_DEVICETYPE, idKey.getText(), "id", new String[]{"number", "deviceName"}, 
+				new String[]{number, deviceName});
+		if(isSucc)
+		{
+			String[] data = new String[]{ids, number, deviceName};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.setValueAt(number, modelIndex, 1);
+			tm.setValueAt(deviceName, modelIndex, 2);
+			result.set(modelIndex, Arrays.asList(data));
+		}		
 	}
 
 	@Action
 	public void delete()
 	{
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择设备类型，双击选择需要删除的设备类型!");
+			return;
+		}
 		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
-		sqlOpt.delete(Constants.CONF_DEVICETYPE, "id", idKey.getText());
+		boolean isSucc = sqlOpt.delete(Constants.CONF_DEVICETYPE, "id", idKey.getText());
+		if(isSucc)
+		{
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.removeRow(modelIndex);
+			result.remove(modelIndex);
+		}
 	}
 
 

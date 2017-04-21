@@ -5,10 +5,16 @@
  */
 package prj.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
-import org.jdesktop.application.SingleFrameApplication;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.application.Action;
 import prj.PrjApp;
+import util.Constants;
+import util.SQLiteCRUD;
+import util.SwingUtil;
 
 /**
  *
@@ -18,6 +24,8 @@ public class WorkLevelPanel extends javax.swing.JPanel
 {
 
 	private JDialog dialog;
+	private List<List> result;
+	private int selId = -1;
 	/**
 	 * Creates new form DptPanel
 	 */
@@ -41,6 +49,7 @@ public class WorkLevelPanel extends javax.swing.JPanel
 				dialog.dispose();
 			}
 		});
+		initTable();		
 		dialog.pack();
 		dialog.setLocationRelativeTo(PrjApp.getApplication().getMainFrame());
 		dialog.setVisible(true);
@@ -67,6 +76,7 @@ public class WorkLevelPanel extends javax.swing.JPanel
         jButton4 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
+        idKey = new javax.swing.JLabel();
 
         setName("Form_workLevel"); // NOI18N
 
@@ -75,16 +85,19 @@ public class WorkLevelPanel extends javax.swing.JPanel
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String []
             {
-                "级别编号", "工资标准/每小时", "难易度"
+                "ID", "级别编号", "工资标准/每小时", "难易度"
             }
-        ));
+        )
+        {
+            public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        });
         jTable1.setName("jTable1"); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
@@ -99,6 +112,8 @@ public class WorkLevelPanel extends javax.swing.JPanel
 
         jTextField2.setName("jTextField2"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(WorkLevelPanel.class, this);
+        jButton1.setAction(actionMap.get("add")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener()
@@ -109,12 +124,15 @@ public class WorkLevelPanel extends javax.swing.JPanel
             }
         });
 
+        jButton2.setAction(actionMap.get("modify")); // NOI18N
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
+        jButton3.setAction(actionMap.get("delete")); // NOI18N
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        jButton4.setAction(actionMap.get("closeAction")); // NOI18N
         jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
         jButton4.setName("jButton4"); // NOI18N
 
@@ -123,6 +141,9 @@ public class WorkLevelPanel extends javax.swing.JPanel
 
         jTextField3.setText(resourceMap.getString("jTextField3.text")); // NOI18N
         jTextField3.setName("jTextField3"); // NOI18N
+
+        idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
+        idKey.setName("idKey"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -142,12 +163,15 @@ public class WorkLevelPanel extends javax.swing.JPanel
                     .addComponent(jTextField3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4)))
+                    .addComponent(idKey))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -157,6 +181,8 @@ public class WorkLevelPanel extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(idKey)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton3)
                             .addComponent(jButton1))
@@ -187,6 +213,7 @@ public class WorkLevelPanel extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel idKey;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -200,4 +227,90 @@ public class WorkLevelPanel extends javax.swing.JPanel
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+
+	private void initTable()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		result = sqlOpt.select(Constants.CONF_WORKLEVELSET, new String[]{"id", "number", "hourWage", "difficult"});
+		DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+		SwingUtil.hideColumn(jTable1, 0);
+		for(List l:result)
+		{
+			tm.addRow(l.toArray());	
+		}
+	}
+
+	@Action
+	public void closeAction()
+	{
+		dialog.dispose();
+	}
+
+	@Action
+	public void add()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		String[] data = new String[]{jTextField1.getText(), jTextField2.getText(), jTextField3.getText()};
+		boolean isSucc = sqlOpt.insert(Constants.CONF_WORKLEVELSET, new String[]{"number", "hourWage", "difficult"}, data);
+		if(isSucc)
+		{
+			int maxId = sqlOpt.getMaxID(Constants.CONF_WORKLEVELSET);
+			data = new String[]{""+maxId, jTextField1.getText(), jTextField2.getText(), jTextField3.getText()};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			tm.addRow(data);
+			result.add(Arrays.asList(data));
+			selId = -1;
+		}
+	}
+
+	@Action
+	public void modify()
+	{
+		String ids = idKey.getText();
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择工种级别，双击选择需要修改的工种级别!");
+			return;
+		}
+		String number = jTextField1.getText();
+		String hourWage = jTextField2.getText();
+		String difficult = jTextField3.getText();
+		if(number.equals("")||hourWage.equals("")||difficult.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, "工种级别编号，难易度，小时工资不合法!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.update(Constants.CONF_WORKLEVELSET, idKey.getText(), "id", new String[]{"number", "hourWage", "difficult"}, 
+				new String[]{number, hourWage, difficult});
+		if(isSucc)
+		{
+			String[] data = new String[]{ids, number, hourWage, difficult};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.setValueAt(number, modelIndex, 1);
+			tm.setValueAt(hourWage, modelIndex, 2);
+			tm.setValueAt(difficult, modelIndex, 3);
+			result.set(modelIndex, Arrays.asList(data));
+		}		
+	}
+
+	@Action
+	public void delete()
+	{
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择工种级别，双击选择需要删除的工种级别!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.delete(Constants.CONF_WORKLEVELSET, "id", idKey.getText());
+		if(isSucc)
+		{
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.removeRow(modelIndex);
+			result.remove(modelIndex);
+		}
+	}
 }

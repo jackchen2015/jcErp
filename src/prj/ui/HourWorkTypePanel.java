@@ -5,10 +5,18 @@
  */
 package prj.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.application.Action;
 import org.jdesktop.application.SingleFrameApplication;
+import org.jdesktop.application.Task;
 import prj.PrjApp;
+import util.Constants;
+import util.SQLiteCRUD;
+import util.SwingUtil;
 
 /**
  *
@@ -18,6 +26,8 @@ public class HourWorkTypePanel extends javax.swing.JPanel
 {
 
 	private JDialog dialog;
+	private List<List> result;
+	private int selId = -1;
 	/**
 	 * Creates new form DptPanel
 	 */
@@ -41,6 +51,7 @@ public class HourWorkTypePanel extends javax.swing.JPanel
 				dialog.dispose();
 			}
 		});
+		initTable();
 		dialog.pack();
 		dialog.setLocationRelativeTo(PrjApp.getApplication().getMainFrame());
 		dialog.setVisible(true);
@@ -67,6 +78,7 @@ public class HourWorkTypePanel extends javax.swing.JPanel
         jButton4 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
+        idKey = new javax.swing.JLabel();
 
         setName("Form_workType"); // NOI18N
 
@@ -75,17 +87,27 @@ public class HourWorkTypePanel extends javax.swing.JPanel
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String []
             {
-                "编号", "工种名称", "计时工资单价/小时"
+                "ID", "编号", "工种名称", "计时工资单价/小时"
             }
-        ));
+        )
+        {
+            public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        });
         jTable1.setName("jTable1"); // NOI18N
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(HourWorkTypePanel.class);
@@ -99,6 +121,8 @@ public class HourWorkTypePanel extends javax.swing.JPanel
 
         jTextField2.setName("jTextField2"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(HourWorkTypePanel.class, this);
+        jButton1.setAction(actionMap.get("add")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener()
@@ -109,12 +133,15 @@ public class HourWorkTypePanel extends javax.swing.JPanel
             }
         });
 
+        jButton2.setAction(actionMap.get("modify")); // NOI18N
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
+        jButton3.setAction(actionMap.get("delete")); // NOI18N
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        jButton4.setAction(actionMap.get("closeAction")); // NOI18N
         jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
         jButton4.setName("jButton4"); // NOI18N
 
@@ -122,6 +149,9 @@ public class HourWorkTypePanel extends javax.swing.JPanel
         jLabel3.setName("jLabel3"); // NOI18N
 
         jTextField3.setName("jTextField3"); // NOI18N
+
+        idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
+        idKey.setName("idKey"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -139,15 +169,21 @@ public class HourWorkTypePanel extends javax.swing.JPanel
                     .addComponent(jTextField1)
                     .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                     .addComponent(jTextField3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(idKey)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,7 +202,8 @@ public class HourWorkTypePanel extends javax.swing.JPanel
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(idKey))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,8 +221,24 @@ public class HourWorkTypePanel extends javax.swing.JPanel
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jTable1MouseClicked
+    {//GEN-HEADEREND:event_jTable1MouseClicked
+		if(javax.swing.SwingUtilities.isLeftMouseButton(evt) 
+			&& evt.getClickCount() == 2)
+		{
+			selId = jTable1.getSelectedRow();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			List<String> rowd = result.get(modelIndex);
+			idKey.setText(rowd.get(0));
+			jTextField1.setText(rowd.get(1));
+			jTextField2.setText(rowd.get(2));
+			jTextField3.setText(rowd.get(3));
+		}
+    }//GEN-LAST:event_jTable1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel idKey;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -199,4 +252,92 @@ public class HourWorkTypePanel extends javax.swing.JPanel
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+
+	private void initTable()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		result = sqlOpt.select(Constants.CONF_WORKTYPESET, new String[]{"id", "number", "workTypeName", "hourWage"});
+		DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+		SwingUtil.hideColumn(jTable1, 0);
+		for(List l:result)
+		{
+			tm.addRow(l.toArray());	
+		}
+	}
+
+	@Action
+	public void closeAction()
+	{
+		dialog.dispose();
+	}
+
+	@Action
+	public void add()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		String[] data = new String[]{jTextField1.getText(), jTextField2.getText(), jTextField3.getText()};
+		boolean isSucc = sqlOpt.insert(Constants.CONF_WORKTYPESET, new String[]{"number", "workTypeName", "hourWage"}, data);
+		if(isSucc)
+		{
+			int maxId = sqlOpt.getMaxID(Constants.CONF_WORKTYPESET);
+			data = new String[]{""+maxId, jTextField1.getText(), jTextField2.getText(), jTextField3.getText()};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			tm.addRow(data);
+			result.add(Arrays.asList(data));
+			selId = -1;
+		}
+	}
+
+	@Action
+	public void modify()
+	{
+		String ids = idKey.getText();
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择工作类型，双击选择需要修改的工作类型!");
+			return;
+		}
+		String number = jTextField1.getText();
+		String workTypeName = jTextField2.getText();
+		String hourWage = jTextField3.getText();
+		if(number.equals("")||workTypeName.equals("")||hourWage.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, "工作类型编号，工作类型名称，小时工资不合法!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.update(Constants.CONF_WORKTYPESET, idKey.getText(), "id", new String[]{"number", "workTypeName", "hourWage"}, 
+				new String[]{number, workTypeName, hourWage});
+		if(isSucc)
+		{
+			String[] data = new String[]{ids, number, workTypeName, hourWage};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.setValueAt(number, modelIndex, 1);
+			tm.setValueAt(workTypeName, modelIndex, 2);
+			tm.setValueAt(hourWage, modelIndex, 3);
+			result.set(modelIndex, Arrays.asList(data));
+		}		
+	}
+
+	@Action
+	public void delete()
+	{
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择工作类型，双击选择需要删除的工作类型!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.delete(Constants.CONF_WORKTYPESET, "id", idKey.getText());
+		if(isSucc)
+		{
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.removeRow(modelIndex);
+			result.remove(modelIndex);
+		}
+	}
+
+
 }

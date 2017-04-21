@@ -5,10 +5,17 @@
  */
 package prj.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.application.Action;
 import org.jdesktop.application.SingleFrameApplication;
 import prj.PrjApp;
+import util.Constants;
+import util.SQLiteCRUD;
+import util.SwingUtil;
 
 /**
  *
@@ -18,6 +25,8 @@ public class DptPanel extends javax.swing.JPanel
 {
 
 	private JDialog dialog;
+	private List<List> result;
+	private int selId = -1;
 	/**
 	 * Creates new form DptPanel
 	 */
@@ -41,6 +50,7 @@ public class DptPanel extends javax.swing.JPanel
 				dialog.dispose();
 			}
 		});
+		initTable();
 		dialog.pack();
 		dialog.setLocationRelativeTo(PrjApp.getApplication().getMainFrame());
 		dialog.setVisible(true);
@@ -65,6 +75,7 @@ public class DptPanel extends javax.swing.JPanel
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        idKey = new javax.swing.JLabel();
 
         setName("Form"); // NOI18N
 
@@ -73,17 +84,27 @@ public class DptPanel extends javax.swing.JPanel
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String []
             {
-                "部门编号", "部门名称"
+                "ID", "部门编号", "部门名称"
             }
-        ));
+        )
+        {
+            public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        });
         jTable1.setName("jTable1"); // NOI18N
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(DptPanel.class);
@@ -99,17 +120,25 @@ public class DptPanel extends javax.swing.JPanel
         jTextField2.setText(resourceMap.getString("jTextField2.text")); // NOI18N
         jTextField2.setName("jTextField2"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(DptPanel.class, this);
+        jButton1.setAction(actionMap.get("add")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
+        jButton2.setAction(actionMap.get("modify")); // NOI18N
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
+        jButton3.setAction(actionMap.get("delete")); // NOI18N
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        jButton4.setAction(actionMap.get("closeAction")); // NOI18N
         jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
         jButton4.setName("jButton4"); // NOI18N
+
+        idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
+        idKey.setName("idKey"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -136,12 +165,18 @@ public class DptPanel extends javax.swing.JPanel
                     .addComponent(jButton3)
                     .addComponent(jButton4))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(idKey)
+                .addGap(162, 162, 162))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(idKey)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -163,8 +198,23 @@ public class DptPanel extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jTable1MouseClicked
+    {//GEN-HEADEREND:event_jTable1MouseClicked
+ 		if(javax.swing.SwingUtilities.isLeftMouseButton(evt) 
+			&& evt.getClickCount() == 2)
+		{
+			selId = jTable1.getSelectedRow();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			List<String> rowd = result.get(modelIndex);
+			idKey.setText(rowd.get(0));
+			jTextField1.setText(rowd.get(1));
+			jTextField2.setText(rowd.get(2));
+		}
+    }//GEN-LAST:event_jTable1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel idKey;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -176,4 +226,87 @@ public class DptPanel extends javax.swing.JPanel
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+	private void initTable()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		result = sqlOpt.select(Constants.CONF_DPT, new String[]{"id", "name", "dptdesc"});
+		DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+		SwingUtil.hideColumn(jTable1, 0);
+		for(List l:result)
+		{
+			tm.addRow(l.toArray());	
+		}
+	}
+
+	@Action
+	public void closeAction()
+	{
+		dialog.dispose();
+	}
+
+	@Action
+	public void add()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		String[] data = new String[]{jTextField1.getText(), jTextField2.getText()};
+		boolean isSucc = sqlOpt.insert(Constants.CONF_DPT, new String[]{"name", "dptdesc"}, data);
+		if(isSucc)
+		{
+			int maxId = sqlOpt.getMaxID(Constants.CONF_DPT);
+			data = new String[]{""+maxId, jTextField1.getText(), jTextField2.getText()};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			tm.addRow(data);
+			result.add(Arrays.asList(data));
+			selId = -1;
+		}
+	}
+
+	@Action
+	public void modify()
+	{
+		String ids = idKey.getText();
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择部门，双击选择需要修改的部门!");
+			return;
+		}
+		String name = jTextField1.getText();
+		String dptdesc = jTextField2.getText();
+		if(name.equals("")||dptdesc.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, "部门名称，部门描述不能为空!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.update(Constants.CONF_DEVICETYPE, idKey.getText(), "id", new String[]{"name", "dptdesc"}, 
+				new String[]{name, dptdesc});
+		if(isSucc)
+		{
+			String[] data = new String[]{ids, name, dptdesc};
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.setValueAt(name, modelIndex, 1);
+			tm.setValueAt(dptdesc, modelIndex, 2);
+			result.set(modelIndex, Arrays.asList(data));
+		}		
+	}
+
+	@Action
+	public void delete()
+	{
+		if(selId == -1)
+		{
+			JOptionPane.showMessageDialog(this, "没有选择部门，双击选择需要删除的部门!");
+			return;
+		}
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		boolean isSucc = sqlOpt.delete(Constants.CONF_DPT, "id", idKey.getText());
+		if(isSucc)
+		{
+			DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			tm.removeRow(modelIndex);
+			result.remove(modelIndex);
+		}
+	}
 }
