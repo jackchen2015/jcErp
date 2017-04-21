@@ -6,6 +6,9 @@ package prj;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,6 +17,7 @@ import org.jdesktop.application.SingleFrameApplication;
 import prj.user.LoginAdapter;
 import prj.user.LoginEvent;
 import prj.user.UserLogin;
+import util.SQLiteCRUD;
 
 /**
  * The main class of the application.
@@ -23,12 +27,17 @@ public class PrjApp extends SingleFrameApplication {
 	private static final Logger logger = Logger.getLogger(PrjApp.class.getName());
 	private JFrame frameLogin;
 	private String logonUser;
+	private SQLiteCRUD slc;
+	private String drv = "org.sqlite.JDBC";
+
+	private String url = "jdbc:sqlite:F:\\person\\prj\\src\\erpdb.db";
 
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
 //        show(new PrjView(this));
+		createDbConnect();
 		// 注册shutdown hook
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		frameLogin = new JFrame(getContext().getResourceMap().getString("login.title"));
@@ -46,6 +55,30 @@ public class PrjApp extends SingleFrameApplication {
 		frameLogin.setVisible(true);
 
 	}
+	
+	private void createDbConnect()
+	{
+		try {
+			Class.forName(drv).newInstance();
+			Connection conn = DriverManager.getConnection(url);
+			if(conn!=null)
+			{
+				slc = new SQLiteCRUD(conn);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+		} catch (IllegalAccessException e) {
+		}
+		
+	}
+	
+	public SQLiteCRUD getSQLiteCRUD()
+	{
+		return slc;
+	}
+	
 	class LoginFrameListener extends WindowAdapter
 	{
 		@Override

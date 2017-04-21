@@ -6,22 +6,31 @@
 package prj.ui;
 
 import java.util.List;
+import java.util.Vector;
 import javax.swing.JDialog;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import org.jdesktop.application.Action;
 import org.jdesktop.application.SingleFrameApplication;
 import prj.PrjApp;
+import util.Constants;
+import util.SQLiteCRUD;
+import util.SwingUtil;
 
 /**
  *
  * @author Administrator
  */
-public class DptPanel extends javax.swing.JPanel
+public class DeviceTypePanel extends javax.swing.JPanel
 {
 
 	private JDialog dialog;
+	
+	private List<List> result;
 	/**
 	 * Creates new form DptPanel
 	 */
-	public DptPanel()
+	public DeviceTypePanel()
 	{
 		initComponents();
 	}
@@ -31,7 +40,7 @@ public class DptPanel extends javax.swing.JPanel
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setName(getName());
 		dialog.add(this);
-		dialog.setTitle("部门信息");
+		dialog.setTitle("编号设备种类");
 
 		dialog.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -41,7 +50,9 @@ public class DptPanel extends javax.swing.JPanel
 				dialog.dispose();
 			}
 		});
+		initTable();
 		dialog.pack();
+		dialog.setLocationRelativeTo(PrjApp.getApplication().getMainFrame());
 		dialog.setVisible(true);
 	}
 	/**
@@ -64,69 +75,85 @@ public class DptPanel extends javax.swing.JPanel
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        idKey = new javax.swing.JLabel();
 
-        setName("Form"); // NOI18N
+        setName("Form_DeviceType"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String []
             {
-                "部门编号", "部门名称"
+                "ID", "编号", "设备种类"
             }
         ));
         jTable1.setName("jTable1"); // NOI18N
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(DptPanel.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(DeviceTypePanel.class);
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
         jTextField1.setName("jTextField1"); // NOI18N
 
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
-        jTextField2.setText(resourceMap.getString("jTextField2.text")); // NOI18N
         jTextField2.setName("jTextField2"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(DeviceTypePanel.class, this);
+        jButton1.setAction(actionMap.get("add")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
+        jButton2.setAction(actionMap.get("modify")); // NOI18N
         jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
         jButton2.setName("jButton2"); // NOI18N
 
+        jButton3.setAction(actionMap.get("delete")); // NOI18N
         jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
+        jButton4.setAction(actionMap.get("closeAction")); // NOI18N
         jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
         jButton4.setName("jButton4"); // NOI18N
+
+        idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
+        idKey.setName("idKey"); // NOI18N
+        idKey.setVisible(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                        .addComponent(idKey))
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -140,30 +167,83 @@ public class DptPanel extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton4))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(idKey)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jButton2)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jTable1MouseClicked
+    {//GEN-HEADEREND:event_jTable1MouseClicked
+        // TODO add your handling code here:
+		if(javax.swing.SwingUtilities.isLeftMouseButton(evt) 
+			&& evt.getClickCount() == 2)
+		{
+			int idx = jTable1.getSelectedRow();
+			int modelIndex = jTable1.convertRowIndexToModel(idx);
+			List<String> rowd = result.get(modelIndex);
+			idKey.setText(rowd.get(0));
+			jTextField1.setText(rowd.get(1));
+			jTextField2.setText(rowd.get(2));
+		}
+    }//GEN-LAST:event_jTable1MouseClicked
+
+	@Action
+	public void closeAction()
+	{
+		this.setVisible(false);
+	}
+
+	@Action
+	public void add()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		sqlOpt.insert(Constants.CONF_DEVICETYPE, new String[]{jTextField1.getText(), jTextField2.getText()});
+	}
+
+	@Action
+	public void modify()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		sqlOpt.update(Constants.CONF_DEVICETYPE, idKey.getText(), "id", new String[]{"number", "deviceName"}, 
+				new String[]{jTextField1.getText(), jTextField2.getText()});
+	}
+
+	@Action
+	public void delete()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		sqlOpt.delete(Constants.CONF_DEVICETYPE, "id", idKey.getText());
+	}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel idKey;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -175,4 +255,16 @@ public class DptPanel extends javax.swing.JPanel
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+	private void initTable()
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		result = sqlOpt.select(Constants.CONF_DEVICETYPE, new String[]{"id", "number", "deviceName"});
+		DefaultTableModel tm = (DefaultTableModel)jTable1.getModel();
+		SwingUtil.hideColumn(jTable1, 0);
+		for(List l:result)
+		{
+			tm.addRow(l.toArray());	
+		}
+	}
 }

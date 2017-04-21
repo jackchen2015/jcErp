@@ -42,6 +42,7 @@ public class DptPanel extends javax.swing.JPanel
 			}
 		});
 		dialog.pack();
+		dialog.setLocationRelativeTo(PrjApp.getApplication().getMainFrame());
 		dialog.setVisible(true);
 	}
 	/**

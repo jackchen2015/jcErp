@@ -13,7 +13,11 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import prj.ui.DeviceTypePanel;
 import prj.ui.DptPanel;
+import prj.ui.HourWorkTypePanel;
+import prj.ui.StylePartPanel;
+import prj.ui.WorkLevelPanel;
 
 /**
  * The application's main frame.
@@ -67,6 +71,8 @@ public class PrjView extends FrameView {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem21 = new javax.swing.JMenuItem();
+        jMenuItem48 = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
         jMenuItem47 = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
@@ -206,21 +212,35 @@ public class PrjView extends FrameView {
         jSeparator8.setName("jSeparator8"); // NOI18N
         sysMenu.add(jSeparator8);
 
+        jMenuItem3.setAction(actionMap.get("workLevelAction")); // NOI18N
         jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
         jMenuItem3.setName("jMenuItem3"); // NOI18N
         sysMenu.add(jMenuItem3);
 
+        jMenuItem4.setAction(actionMap.get("hourWorkTypeAction")); // NOI18N
         jMenuItem4.setText(resourceMap.getString("jMenuItem4.text")); // NOI18N
         jMenuItem4.setName("jMenuItem4"); // NOI18N
         sysMenu.add(jMenuItem4);
 
         jMenuItem1.setText(resourceMap.getString("jMenuItem1.text")); // NOI18N
         jMenuItem1.setName("jMenuItem1"); // NOI18N
+        jMenuItem1.setVisible(false);
         sysMenu.add(jMenuItem1);
+
+        jMenuItem21.setAction(actionMap.get("DeviceTypeAction")); // NOI18N
+        jMenuItem21.setText(resourceMap.getString("jMenuItem21.text")); // NOI18N
+        jMenuItem21.setName("jMenuItem21"); // NOI18N
+        sysMenu.add(jMenuItem21);
+
+        jMenuItem48.setAction(actionMap.get("StylePartAction")); // NOI18N
+        jMenuItem48.setText(resourceMap.getString("jMenuItem48.text")); // NOI18N
+        jMenuItem48.setName("jMenuItem48"); // NOI18N
+        sysMenu.add(jMenuItem48);
 
         jSeparator9.setName("jSeparator9"); // NOI18N
         sysMenu.add(jSeparator9);
 
+        jMenuItem47.setAction(actionMap.get("exit")); // NOI18N
         jMenuItem47.setText(resourceMap.getString("jMenuItem47.text")); // NOI18N
         jMenuItem47.setName("jMenuItem47"); // NOI18N
         sysMenu.add(jMenuItem47);
@@ -463,6 +483,7 @@ public class PrjView extends FrameView {
         jMenu4.setText(resourceMap.getString("jMenu4.text")); // NOI18N
         jMenu4.setName("jMenu4"); // NOI18N
 
+        jMenuItem25.setAction(actionMap.get("showAboutBox")); // NOI18N
         jMenuItem25.setIcon(resourceMap.getIcon("jMenuItem25.icon")); // NOI18N
         jMenuItem25.setText(resourceMap.getString("jMenuItem25.text")); // NOI18N
         jMenuItem25.setName("jMenuItem25"); // NOI18N
@@ -491,6 +512,40 @@ public class PrjView extends FrameView {
 		panel.showDialog();
 	}
 
+	@Action
+	public void workLevelAction()
+	{
+		WorkLevelPanel wlp = new WorkLevelPanel();
+		wlp.showDialog();
+	}
+
+	@Action
+	public void hourWorkTypeAction()
+	{
+		HourWorkTypePanel hwtp = new HourWorkTypePanel();
+		hwtp.showDialog();
+	}
+
+	@Action
+	public void DeviceTypeAction()
+	{
+		DeviceTypePanel dtp = new DeviceTypePanel();
+		dtp.showDialog();
+	}
+
+	@Action
+	public void StylePartAction()
+	{
+		StylePartPanel spp = new StylePartPanel();
+		spp.showDialog();
+	}
+
+	@Action
+	public void exit()
+	{
+		System.exit(0);
+	}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem dptItem;
     private javax.swing.JButton jButton1;
@@ -517,6 +572,7 @@ public class PrjView extends FrameView {
     private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem20;
+    private javax.swing.JMenuItem jMenuItem21;
     private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem23;
     private javax.swing.JMenuItem jMenuItem24;
@@ -545,6 +601,7 @@ public class PrjView extends FrameView {
     private javax.swing.JMenuItem jMenuItem45;
     private javax.swing.JMenuItem jMenuItem46;
     private javax.swing.JMenuItem jMenuItem47;
+    private javax.swing.JMenuItem jMenuItem48;
     private javax.swing.JMenuItem jMenuItem49;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem50;
