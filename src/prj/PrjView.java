@@ -4,41 +4,616 @@
 
 package prj;
 
-import java.awt.BorderLayout;
+import com.hongxin.saf.SingleFrameApplication;
+import com.hongxin.saf.SingleFrameView;
+import com.hongxin.component.PainterUtil;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.zip.DataFormatException;
+import javax.swing.BorderFactory;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
-import org.jdesktop.application.SingleFrameApplication;
-import org.jdesktop.application.FrameView;
-import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
+import net.infonode.docking.RootWindow;
+import net.infonode.docking.SplitWindow;
+import net.infonode.docking.TabWindow;
+import net.infonode.docking.util.ViewMap;
+import net.infonode.util.Direction;
+import org.jdesktop.swingx.JXFrame;
+import org.jdesktop.swingx.JXPanel;
 import prj.ui.DeviceTypePanel;
 import prj.ui.DptPanel;
 import prj.ui.HourWorkTypePanel;
+import prj.ui.ManageTreePanel;
+import prj.ui.ObjectDetailsPanel;
+import prj.ui.RtSceneSTPanel;
 import prj.ui.StylePartPanel;
 import prj.ui.WorkLevelPanel;
+import prj.user.UserPurview;
+import util.Constants;
+import util.GUIUtil;
 
 /**
  * The application's main frame.
  */
-public class PrjView extends FrameView {
+public class PrjView extends SingleFrameView {
+	/**
+	 * Alloy主题缓存。
+	 */
+	private Map<String, Object> mapAlloyTheme;
 
     public PrjView(SingleFrameApplication app) {
         super(app);
+		mapAlloyTheme = new HashMap<String, Object>();
+		System.getProperties().setProperty("system.session.autolocking", "false");
+		System.getProperties().setProperty("sys.laf.theme", "false");
+		System.getProperties().setProperty("sys.laf.theme", "false");
 
-        initComponents();
-
+//        initComponents();
+		initialize();
         // status bar initialization - message timeout, idle icon and busy animation, etc
-        ResourceMap resourceMap = getResourceMap();
-        int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
+//        ResourceMap resourceMap = getResourceMap();
+//        int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
 
     }
 
+	
+	/**
+	 * 初始化视图。   
+	 */
+	public void initialize()
+	{
+		// 预初始化组件事件
+		beforeInitComponents();
+		// 初始化组件
+		initComponentsImpl();
+		// 自定义初始化操作
+		final GlobalGlassBox glassService = new GlobalGlassBox();
+		glassService.blockInput();
+		javax.swing.SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// after初始化组件
+				afterInitComponents();
+				glassService.unblockInput();
+			}
+		});
+	}
+	
+	/**
+	 * 初始化组件。
+	 */
+	protected void initComponentsImpl()
+	{
+		initComponents();
+	}
+
+	@Override
+	public void showComponents()
+	{
+		// 根据权限定制界面
+//		PrivilegeController.checkPrivilege(JOmcUIView.class, this, menuBar, baseToolBar);
+		// 设置各个组件
+		setComponent(mainPanel);
+//		setMenuBar(menuBar);
+//		setStatusBar(statusBar);
+//		setToolBar(toolBar);
+	}
+	
+	// <editor-fold defaultstate="collapsed" desc="PCL">
+	/**
+	 * 系统属性PCL.
+	 */
+	private class SystemPropertyPCL implements PropertyChangeListener
+	{
+		@Override
+		public void propertyChange(java.beans.PropertyChangeEvent evt)
+		{}
+	}
+	
+	/**
+	 * 系统lafPCL.
+	 */
+	private class LafPropertyPCL implements PropertyChangeListener
+	{
+		@Override
+		public void propertyChange(java.beans.PropertyChangeEvent evt)
+		{
+			if(evt.getPropertyName().equalsIgnoreCase("lookAndFeel"))
+			{
+				((JXPanel)getRootPane().getContentPane()).setBackgroundPainter(PainterUtil.defaultBackgroundPainter());
+			}
+		}
+	}
+	
+	/**
+	 * 系统idle属性PCL.
+	 */
+	private class IdlePropertyPCL implements PropertyChangeListener
+	{
+		@Override
+		public void propertyChange(java.beans.PropertyChangeEvent evt)
+		{
+			// 进入idle状态时自动锁定
+			if(((JXFrame)getFrame()).isIdle())
+			{
+				if(System.getProperty("system.session.autolocking").equals("false")
+						//&& UserSession.getInstance().getUserInfo().isEntered()
+						)
+				{
+					lockSession();
+				}
+			}
+		}
+	}
+	// </editor-fold>
+
+	/**
+	 * 组件初始化前事件。
+	 */
+	protected void beforeInitComponents()
+	{
+		// global background
+		((JXPanel)getRootPane().getContentPane()).setBackgroundPainter(PainterUtil.defaultBackgroundPainter());
+		// 初始化服务
+		registerService();
+	}
+
+	/**
+	 * 组件初始化后事件。
+	 */
+	protected void afterInitComponents()
+	{
+		// 初始化视图
+		initViews();
+		// 初始化菜单
+		initMenuBar();
+		// 初始化工具栏
+		initToolBar();
+		// 初始化状态栏
+		initStatusBar();
+		// 初始化服务
+		initService();
+		// 系统属性PCL
+		getApplication().addPropertyChangeListener(new SystemPropertyPCL());
+		// 系统idle事件
+		getFrame().addPropertyChangeListener("idle", new IdlePropertyPCL());
+		// 系统laf事件
+		UIManager.addPropertyChangeListener(new LafPropertyPCL());
+	}
+
+	/**
+	 * 初始化菜单栏。
+	 */
+	protected void initMenuBar()
+	{
+		// 设置主题菜单状态
+		Component[] themeMenus = jMenu8.getMenuComponents();
+		if(!GUIUtil.isThemeSupported())
+		{
+			// laf不支持主题，禁用菜单
+			for(Component themeMenu : themeMenus)
+			{
+				themeMenu.setEnabled(false);
+			}
+		}
+		else
+		{
+			// laf支持主题，检查当前主题
+			for(Component themeMenu : themeMenus)
+			{
+				if(themeMenu instanceof JRadioButtonMenuItem)
+				{
+					String command =
+							((JRadioButtonMenuItem)themeMenu).getActionCommand();
+					if(GUIUtil.isCurrentTheme(command))
+					{
+						((JRadioButtonMenuItem)themeMenu).setSelected(true);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 初始化工具栏。
+	 */
+	protected void initToolBar()
+	{
+		// place holder
+	}
+	
+	/**
+	 * 初始化状态栏。
+	 */
+	protected void initStatusBar()
+	{
+		statusBar.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, 
+		Color.WHITE, statusBar.getBackground(), statusBar.getBackground(), Color.GRAY));
+	}
+
+	/**
+	 * 注册服务。
+	 */
+	protected void registerService()
+	{
+		// 注册服务
+		// 地图服务
+//		ServiceUtils.getInstance().register(ServiceConstants.SVC_MAP, ServiceLoader.
+//				load(MapService.class).iterator().next());
+//		// 告警服务
+//		ServiceUtils.getInstance().register(ServiceConstants.SVC_ALARM, ServiceLoader.
+//				load(AlarmService.class).iterator().next());
+//		// 配置服务
+//		ServiceUtils.getInstance().register(ServiceConstants.SVC_CONFIG, ServiceLoader.
+//				load(ConfigService.class).iterator().next());
+	}
+
+	/**
+	 * 初始化服务。
+	 */
+	protected void initService()
+	{
+		// 初始化登录服务
+//		((LoginService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_LOGIN)).
+//				initialize();
+//		// 初始化框架服务
+//		((FrameService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_FRAME)).
+//				initialize();
+//		// 初始化地图服务
+//		((MapService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_MAP)).
+//				initialize();
+//		// 初始化配置服务
+//		((ConfigService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_CONFIG)).
+//				initialize();
+	}
+	
+	/**
+	 * 判断当前用户是否具有指定权限。
+	 * @param id 权限ID
+	 * @return 判断结果
+	 */
+	private boolean hasPurview(int id)
+	{
+		return UserPurview.getInstance().hasPurview(id);
+	}
+
+	/**
+	 * 初始化静态视图。
+	 */
+	protected void initViews()
+	{
+		//初始化
+
+		ResourceMap rm = getResourceMap();
+		// 初始化dockingPanel
+		SingleFrameApplication application = SingleFrameApplication.getInstance();
+		// 初始化各个view
+//		ConfigModule cm = ServiceLoader.load(ConfigModule.class).iterator().next();
+//		TopoModule tm = ServiceLoader.load(TopoModule.class).iterator().next();
+//		SystemModule sm = ServiceLoader.load(SystemModule.class).iterator().next();
+//		OperaModule mm = ServiceLoader.load(OperaModule.class).iterator().next();
+//		AlarmModule am = ServiceLoader.load(AlarmModule.class).iterator().next();
+		// 对象树
+//		application.addStaticView(OmcPerspectives.VIEW_DEVICETREE,
+//				rm.getString("staticview.device"), rm.getIcon("image.treeView"),
+//				cm.createObjectTreeComponent(), Direction.LEFT);
+		application.addStaticView(Constants.MANAGETREE, "管理树", rm.getIcon("image.treeView"), 
+				new ManageTreePanel(), Direction.LEFT);
+		// 对象属性
+		application.addStaticView(Constants.VIEW_PROPERTY,
+				rm.getString("staticview.property"), rm.getIcon("image.details"),
+				new ObjectDetailsPanel(), Direction.LEFT);
+		//管理树
+//		application.addStaticView(OmcPerspectives.VIEW_MANAGETREE,
+//				rm.getString("staticview.managetree"), rm.getIcon("image.treeView"),
+//				cm.createManageTreeComponent(), Direction.LEFT);
+		// 输出窗口
+//		application.addStaticView(OmcPerspectives.VIEW_OUTPUT,
+//				rm.getString("staticview.output"), rm.getIcon("image.eventlog"),
+//				new OutputView(), Direction.DOWN);
+		
+//		if(hasPurview(UserPurview.View_Cluster))
+//		{
+//			// 群组视图addDynamicView
+//			application.addStaticView(Constants.VIEW_DASHBOARD,
+//					rm.getString("staticview.cluster"), rm.getIcon("image.treeView"),
+//					cm.createClusterTreeComponent(), Direction.LEFT);
+//		}
+//		if(hasPurview(UserPurview.View_Manage))
+//		{
+//			application.addStaticView(Constants.MANAGETREE, 
+//				rm.getString("staticview.managetree"), rm.getIcon("image.treeView"),
+//				cm.createManageTreeComponent(), Direction.LEFT);
+//		}
+//		if(hasPurview(UserPurview.View_Alarm))
+//		{
+//			// 告警视图
+//			application.addStaticView(OmcPerspectives.VIEW_ALARM,
+//					rm.getString("staticview.alarm"), rm.getIcon("image.alert"),
+//					am.createAlarmViewComponent(), Direction.DOWN);
+//		}
+//		if(hasPurview(UserPurview.View_Alarm))
+//		{
+//			// 告警统计视图
+////			application.addStaticView(OmcPerspectives.VIEW_ALARMSTATIC,
+////					rm.getString("staticview.alarmstatic"), rm.getIcon("image.perf"),
+////					cm.createAlarmStaticViewComponent(), Direction.DOWN);
+//		}
+//		if(hasPurview(UserPurview.View_Config))
+//		{
+//			// 配置视图
+//			application.addStaticView(OmcPerspectives.VIEW_CONFIGTREE,
+//					rm.getString("staticview.config"), rm.getIcon("image.treeView"),
+//					cm.createConfigTreeComponent(), Direction.LEFT);
+//		}
+//		if(hasPurview(UserPurview.View_File))
+//		{
+//			application.addStaticView(OmcPerspectives.VIEW_FILETREE,
+//					rm.getString("staticview.file"), rm.getIcon("image.treeView"),
+//					cm.createFileTreeComponent(), Direction.LEFT);
+//		}
+//		if(hasPurview(UserPurview.View_Topo))
+//		{
+//			application.addStaticView(OmcPerspectives.VIEW_SKETCH,
+//					rm.getString("staticview.sketch"), rm.getIcon("image.hardware"),
+//					tm.getFrameSketchComponent(), Direction.DOWN);
+//		}
+//		if(hasPurview(UserPurview.View_Map))
+//		{
+//			application.addStaticView(OmcPerspectives.VIEW_MAP,
+//					rm.getString("staticview.map"), rm.getIcon("image.globe"),
+//					tm.getMapComponent(), Direction.DOWN);
+//		}
+//		if(hasPurview(UserPurview.View_System))
+//		{
+//			application.addStaticView(OmcPerspectives.VIEW_SYSTEMMONITOR,
+//					rm.getString("staticview.system"), rm.getIcon("image.monitor"),
+//					sm.createSystemMonitorComponent(), Direction.DOWN);
+//		}
+		if(hasPurview(UserPurview.View_BoardState))
+		{
+			application.addStaticView(Constants.VIEW_RTSCENEST,
+					rm.getString("staticview.board"), rm.getIcon("image.boardState"),
+					new RtSceneSTPanel(), Direction.DOWN);
+		}
+//		if(hasPurview(UserPurview.View_OpenScene))
+//		{
+//			application.addStaticView(OmcPerspectives.VIEW_OPENSCENE,
+//					rm.getString("staticview.openScene"), rm.getIcon("image.scene"),
+//					mm.createOpenSceneViewComponent(), Direction.DOWN);
+//		}
+//		if(hasPurview(UserPurview.View_Dashboard))
+//		{
+//			application.addStaticView(Constants.VIEW_DASHBOARD,
+//					rm.getString("staticview.dashboard"), rm.getIcon("image.star"),
+//					new MultDashboardPanel(), Direction.DOWN);
+//		}
+		// 初始化RootWindow
+		mainPanel.add(setDefaultLayout(), java.awt.BorderLayout.CENTER);
+		// TODO 注册视图模式
+	}
+
+	/**
+	 * 检查并获取Tab视图。
+	 * @param tabWindow 中心视图
+	 * @return 创建的或已存在的Tab视图
+	 */
+	private TabWindow getTabWindow(TabWindow tabWindow)
+	{
+		if(tabWindow == null)
+		{
+			tabWindow = new TabWindow();
+		}
+		return tabWindow;
+	}
+	
+	/**
+	 * 设置docking view的初始layout
+	 * @return 唯一RootWindow对象
+	 */
+	protected RootWindow setDefaultLayout()
+	{
+		SingleFrameApplication application = SingleFrameApplication.getInstance();
+		// 设置view的初始layout
+		RootWindow rw = application.getDockingRootWindow();
+		// 是否允许自定义布局
+		Boolean enableLayout =
+				Boolean.getBoolean(System.getProperty("system.layout.enable"));
+		// 允许自定义布局并且布局版本没有过期时使用自定义布局
+		//if(enableLayout && !OmcPreferences.getInstance().isLayoutExpired())
+		if(enableLayout)
+		{
+//			try
+//			{
+				// 加载自定义布局
+//				String layout = OmcPreferences.getInstance().getString("system.layout");
+//				if(layout != null && !layout.isEmpty())
+//				{
+//					SafUtil.readLayout(rw, layout);
+//					return rw;
+//				}
+//			}
+//			catch(IOException | DataFormatException | NullPointerException exp)
+//			{}
+//			finally
+//			{
+//				application.afterRestoreLayout();
+//			}
+		}
+		// 获取静态视图
+		ViewMap vm = application.getStaticViews();
+		// 缺省布局下
+		// 设备树、设备属性垂直分割
+		// 中心视图为多Tab页面
+		TabWindow centerWindow = null;
+		if(hasPurview(UserPurview.View_Dashboard))
+		{
+			// dashboard视图
+			centerWindow = getTabWindow(centerWindow);
+			centerWindow.addTab(vm.getView(Constants.VIEW_DASHBOARD));
+		}
+		// 告警
+//		if(hasPurview(UserPurview.View_Alarm))
+//		{
+//			centerWindow = getTabWindow(centerWindow);
+//			centerWindow.addTab(vm.getView(OmcPerspectives.VIEW_ALARM));
+//		}
+//		// 拓扑
+//		if(hasPurview(UserPurview.View_Topo))
+//		{
+//			centerWindow = getTabWindow(centerWindow);
+//			centerWindow.addTab(vm.getView(OmcPerspectives.VIEW_SKETCH));
+//		}
+//		// 地图
+//		if(hasPurview(UserPurview.View_Map))
+//		{
+//			centerWindow = getTabWindow(centerWindow);
+//			centerWindow.addTab(vm.getView(OmcPerspectives.VIEW_MAP));
+//		}
+//		// 系统状态
+//		if(hasPurview(UserPurview.View_System))
+//		{
+//			centerWindow = getTabWindow(centerWindow);
+//			centerWindow.addTab(vm.getView(OmcPerspectives.VIEW_SYSTEMMONITOR));
+//		}
+//		// 单板状态
+//		if(hasPurview(UserPurview.View_BoardState))
+//		{
+//			centerWindow = getTabWindow(centerWindow);
+//			centerWindow.addTab(vm.getView(OmcPerspectives.VIEW_BOARDSTATE));
+//		}
+//		// 开站场景
+//		if(hasPurview(UserPurview.View_OpenScene))
+//		{
+//			centerWindow = getTabWindow(centerWindow);
+//			centerWindow.addTab(vm.getView(OmcPerspectives.VIEW_OPENSCENE));
+//		}
+		// 左侧视图
+		TabWindow leftWindow = null;
+		leftWindow = getTabWindow(leftWindow);
+		/* 设备树 + 设备信息 */
+		leftWindow.addTab(
+				new SplitWindow(false,
+				0.7f,
+				/*NORTH*/
+				vm.getView(Constants.MANAGETREE),
+				/*SOUTH*/
+				vm.getView(Constants.VIEW_PROPERTY)));
+		// 群组树
+		if(hasPurview(UserPurview.View_Cluster))
+		{
+		//	leftWindow = getTabWindow(leftWindow);
+		//	leftWindow.addTab(vm.getView(OmcPerspectives.VIEW_CLUSTERTREE));
+		}
+		// 配置树
+//		if(hasPurview(UserPurview.View_Config))
+//		{
+//			leftWindow = getTabWindow(leftWindow);
+//			leftWindow.addTab(vm.getView(OmcPerspectives.VIEW_CONFIGTREE));
+//		}
+		// 文件树
+		if(hasPurview(UserPurview.View_File))
+		{
+		//	leftWindow = getTabWindow(leftWindow);
+		//	leftWindow.addTab(vm.getView(OmcPerspectives.VIEW_FILETREE));
+		}
+		//管理树
+		if(hasPurview(UserPurview.View_Manage))
+		{
+		//	leftWindow = getTabWindow(leftWindow);
+		//	leftWindow.addTab(vm.getView(OmcPerspectives.VIEW_MANAGETREE));
+		}
+		// 下方视图
+		TabWindow bottomWindow = null;
+		bottomWindow = getTabWindow(bottomWindow);
+//		bottomWindow.addTab(vm.getView(OmcPerspectives.VIEW_OUTPUT));
+		// 设置布局
+		if(centerWindow != null)
+		{
+			rw.setWindow(new SplitWindow(false,
+					0.75f,
+					/*TOP*/
+					new SplitWindow(true, 0.25f, leftWindow, centerWindow),
+					/*BOTTOM*/
+					bottomWindow));
+		}
+		else
+		{
+			rw.setWindow(new SplitWindow(false,
+					0.75f,
+					/*TOP*/
+					leftWindow,
+					/*BOTTOM*/
+					bottomWindow));
+		}
+		// 缺省最小化输出视图
+//		if(vm.getView(OmcPerspectives.VIEW_OUTPUT) != null)
+//		{
+//			vm.getView(OmcPerspectives.VIEW_OUTPUT).minimize();
+//		}
+//		// 缺省显示页面(对象树和dashboard)
+//		if(vm.getView(OmcPerspectives.VIEW_DEVICETREE) != null)
+//		{
+//			vm.getView(OmcPerspectives.VIEW_DEVICETREE).restoreFocus();
+//		}
+//		if(vm.getView(OmcPerspectives.VIEW_DASHBOARD) != null)
+//		{
+//			vm.getView(OmcPerspectives.VIEW_DASHBOARD).restoreFocus();
+//		}
+		return rw;
+	}
+	
+	/**
+	 * 将当前布局保存存为缺省布局
+	 */
+	public void saveAsDefaultLayout()
+	{
+		SingleFrameApplication application = SingleFrameApplication.getInstance();
+		RootWindow rw = application.getDockingRootWindow();
+		// 是否允许自定义布局
+		Boolean enableLayout = Boolean.getBoolean(System.getProperty("system.layout.enable"));
+		if(enableLayout)
+		{
+			// 保存自定义布局
+//			OmcPreferences.getInstance().setProperty("system.layout", 
+//					SafUtil.writeLayout(rw));
+		}
+	}
+	
+	@Action
+	public void lockSession()
+	{
+//		try
+//		{
+//			UserModule um = ServiceLoader.load(UserModule.class).iterator().next();
+//			um.lockSession();
+//		}
+//		catch(Exception exp)
+//		{}
+	}
+	
+	
+	
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
-            JFrame mainFrame = PrjApp.getApplication().getMainFrame();
+            JFrame mainFrame = PrjApp.getApplication().getMainJFrame();
             aboutBox = new PrjAboutBox(mainFrame);
             aboutBox.setLocationRelativeTo(mainFrame);
         }
@@ -133,9 +708,13 @@ public class PrjView extends FrameView {
         jMenuItem45 = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         jMenuItem46 = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
+        jMenuItem51 = new javax.swing.JMenuItem();
+        jMenuItem52 = new javax.swing.JMenuItem();
+        jMenuItem53 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem25 = new javax.swing.JMenuItem();
-        jXStatusBar1 = new org.jdesktop.swingx.JXStatusBar();
+        statusBar = new org.jdesktop.swingx.JXStatusBar();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -480,6 +1059,24 @@ public class PrjView extends FrameView {
 
         menuBar.add(jMenu6);
 
+        jMenu8.setText(resourceMap.getString("jMenu8.text")); // NOI18N
+        jMenu8.setName("jMenu8"); // NOI18N
+
+        jMenuItem51.setAction(actionMap.get("setLafTheme")); // NOI18N
+        jMenuItem51.setText(resourceMap.getString("jMenuItem51.text")); // NOI18N
+        jMenuItem51.setName("jMenuItem51"); // NOI18N
+        jMenu8.add(jMenuItem51);
+
+        jMenuItem52.setText(resourceMap.getString("jMenuItem52.text")); // NOI18N
+        jMenuItem52.setName("jMenuItem52"); // NOI18N
+        jMenu8.add(jMenuItem52);
+
+        jMenuItem53.setText(resourceMap.getString("jMenuItem53.text")); // NOI18N
+        jMenuItem53.setName("jMenuItem53"); // NOI18N
+        jMenu8.add(jMenuItem53);
+
+        menuBar.add(jMenu8);
+
         jMenu4.setText(resourceMap.getString("jMenu4.text")); // NOI18N
         jMenu4.setName("jMenu4"); // NOI18N
 
@@ -491,17 +1088,17 @@ public class PrjView extends FrameView {
 
         menuBar.add(jMenu4);
 
-        jXStatusBar1.setBorder(javax.swing.BorderFactory.createLineBorder(resourceMap.getColor("jXStatusBar1.border.lineColor"))); // NOI18N
-        jXStatusBar1.setName("jXStatusBar1"); // NOI18N
-        jXStatusBar1.setOpaque(false);
+        statusBar.setBorder(javax.swing.BorderFactory.createLineBorder(resourceMap.getColor("statusBar.border.lineColor"))); // NOI18N
+        statusBar.setName("statusBar"); // NOI18N
+        statusBar.setOpaque(false);
 
-        jXStatusBar1.add(new JLabel("当前版本V1.0.0"));
-        jXStatusBar1.add(new JLabel("最后更新时间2017.03.22"), org.jdesktop.swingx.JXStatusBar.Constraint.ResizeBehavior.FILL);
-        jXStatusBar1.add(new UserStatusPane());
+        statusBar.add(new JLabel("当前版本V1.0.0"));
+        statusBar.add(new JLabel("最后更新时间2017.03.22"), org.jdesktop.swingx.JXStatusBar.Constraint.ResizeBehavior.FILL);
+        statusBar.add(new UserStatusPane());
 
         setComponent(mainPanel);
         setMenuBar(menuBar);
-        setStatusBar(jXStatusBar1);
+        setStatusBar(statusBar);
         setToolBar(jToolBar1);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -546,6 +1143,72 @@ public class PrjView extends FrameView {
 		System.exit(0);
 	}
 
+	@Action
+	public void setLafTheme(ActionEvent event)
+	{
+		String themeName = event.getActionCommand();
+		try
+		{
+			javax.swing.LookAndFeel laf = UIManager.getLookAndFeel();
+			if(themeName.contains("alloy"))
+			{
+				com.incors.plaf.alloy.AlloyTheme theme = (com.incors.plaf.alloy.AlloyTheme)mapAlloyTheme.get(themeName);
+				if(theme == null)
+				{
+					if(themeName.contains("glass"))
+					{
+						theme = new com.incors.plaf.alloy.themes.glass.GlassTheme();
+						mapAlloyTheme.put(themeName, theme);
+					}
+					else if(themeName.contains("acid"))
+					{
+						theme = new com.incors.plaf.alloy.themes.acid.AcidTheme();
+						mapAlloyTheme.put(themeName, theme);
+					}
+					else if(themeName.contains("bedouin"))
+					{
+						theme = new com.incors.plaf.alloy.themes.bedouin.BedouinTheme();
+						mapAlloyTheme.put(themeName, theme);
+					}
+				}
+				if(laf instanceof com.incors.plaf.alloy.AlloyLookAndFeel)
+				{
+					com.incors.plaf.alloy.AlloyLookAndFeel aLaf = (com.incors.plaf.alloy.AlloyLookAndFeel)laf;
+					if(theme != null)
+					{
+						// 设置主题
+						aLaf.setTheme(theme, true);
+					}
+				}
+				else
+				{
+					laf = new com.incors.plaf.alloy.AlloyLookAndFeel(theme);
+					UIManager.setLookAndFeel(laf);
+				}
+				// 保存设置
+				System.setProperty("sys.laf.theme", themeName);
+			}
+			// 手动触发laf变更事件
+			// 部分UI组件库，如InfoNode、SwingX，依赖lookAndFeel属性变更事件实现更新显示
+			// 因此，即使laf没有发生实际变更，也需要手动触发一次事件
+			PropertyChangeListener[] listeners = UIManager.getPropertyChangeListeners();
+			for(PropertyChangeListener l : listeners)
+			{
+				l.propertyChange(new PropertyChangeEvent(UIManager.class, 
+						"lookAndFeel",  "", UIManager.getLookAndFeel().getName()));
+			}
+			SingleFrameApplication.getInstance().updateLookAndFeel();
+			// 同步事件
+//			lookAndFeelChanged();
+		}
+		catch(Exception exp)
+		{}
+
+		javax.swing.JMenuItem menu =
+				(javax.swing.JMenuItem)event.getSource();
+		menu.setSelected(true);
+	}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem dptItem;
     private javax.swing.JButton jButton1;
@@ -559,6 +1222,7 @@ public class PrjView extends FrameView {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
@@ -605,6 +1269,9 @@ public class PrjView extends FrameView {
     private javax.swing.JMenuItem jMenuItem49;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem50;
+    private javax.swing.JMenuItem jMenuItem51;
+    private javax.swing.JMenuItem jMenuItem52;
+    private javax.swing.JMenuItem jMenuItem53;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
@@ -622,9 +1289,9 @@ public class PrjView extends FrameView {
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
-    private org.jdesktop.swingx.JXStatusBar jXStatusBar1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private org.jdesktop.swingx.JXStatusBar statusBar;
     private javax.swing.JMenu sysMenu;
     // End of variables declaration//GEN-END:variables
 

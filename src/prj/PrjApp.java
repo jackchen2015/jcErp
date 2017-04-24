@@ -4,6 +4,7 @@
 
 package prj;
 
+import com.hongxin.saf.SingleFrameApplication;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -13,7 +14,6 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
 import prj.user.LoginAdapter;
 import prj.user.LoginEvent;
 import prj.user.UserLogin;
@@ -114,6 +114,7 @@ public class PrjApp extends SingleFrameApplication {
 			setLogonUser(source.getUser());
 			logger.info("user " + logonUser + " login");
 			// SAF会将首次显示的视图作为主视图
+//			PrjView pv = new PrjView();
 			show(new PrjView(PrjApp.this	));
 			// 隐藏登录视图
 			frameLogin.setVisible(false);
@@ -130,8 +131,8 @@ public class PrjApp extends SingleFrameApplication {
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
      */
-    @Override protected void configureWindow(java.awt.Window root) {
-    }
+//    @Override protected void configureWindow(java.awt.Window root) {
+//    }
 	/**
 	 * @return the logonUser
 	 */

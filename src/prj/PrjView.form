@@ -551,6 +551,35 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu8">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="jMenu8.text"/>
+            <Property name="name" type="java.lang.String" value="jMenu8" noResource="true"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem51">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="setLafTheme" methodName="setLafTheme"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="jMenuItem51.text"/>
+                <Property name="name" type="java.lang.String" value="jMenuItem51" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem52">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="jMenuItem52.text"/>
+                <Property name="name" type="java.lang.String" value="jMenuItem52" noResource="true"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem53">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="jMenuItem53.text"/>
+                <Property name="name" type="java.lang.String" value="jMenuItem53" noResource="true"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu4">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="jMenu4.text"/>
@@ -571,20 +600,20 @@
         </Menu>
       </SubComponents>
     </Container>
-    <Container class="org.jdesktop.swingx.JXStatusBar" name="jXStatusBar1">
+    <Container class="org.jdesktop.swingx.JXStatusBar" name="statusBar">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
             <LineBorder>
-              <Property name="color" resourceKey="jXStatusBar1.border.lineColor"/>
+              <Property name="color" resourceKey="statusBar.border.lineColor"/>
             </LineBorder>
           </Border>
         </Property>
-        <Property name="name" type="java.lang.String" value="jXStatusBar1" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="statusBar" noResource="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="jXStatusBar1.add(new JLabel(&quot;&#x5f53;&#x524d;&#x7248;&#x672c;V1.0.0&quot;));&#xa;jXStatusBar1.add(new JLabel(&quot;&#x6700;&#x540e;&#x66f4;&#x65b0;&#x65f6;&#x95f4;2017.03.22&quot;), org.jdesktop.swingx.JXStatusBar.Constraint.ResizeBehavior.FILL);&#xa;jXStatusBar1.add(new UserStatusPane());"/>
-        <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="jXStatusBar1.setOpaque(false);"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="statusBar.add(new JLabel(&quot;&#x5f53;&#x524d;&#x7248;&#x672c;V1.0.0&quot;));&#xa;statusBar.add(new JLabel(&quot;&#x6700;&#x540e;&#x66f4;&#x65b0;&#x65f6;&#x95f4;2017.03.22&quot;), org.jdesktop.swingx.JXStatusBar.Constraint.ResizeBehavior.FILL);&#xa;statusBar.add(new UserStatusPane());"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="statusBar.setOpaque(false);"/>
       </AuxValues>
     </Container>
   </NonVisualComponents>
@@ -596,7 +625,7 @@
       <ComponentRef name="menuBar"/>
     </Property>
     <Property name="statusBar" type="javax.swing.JComponent" editor="org.netbeans.modules.form.ComponentChooserEditor">
-      <ComponentRef name="jXStatusBar1"/>
+      <ComponentRef name="statusBar"/>
     </Property>
     <Property name="toolBar" type="javax.swing.JToolBar" editor="org.netbeans.modules.form.ComponentChooserEditor">
       <ComponentRef name="jToolBar1"/>

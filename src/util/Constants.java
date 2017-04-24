@@ -24,4 +24,11 @@ public class Constants
 	public final static String USER_ACTION = "USER_ACTION";
 	public final static String USER_USERROLE = "USER_USERROLE";
 	public final static String USER_ROLEACTION = "USER_ROLEACTION";	
+	
+	
+	public final static int MANAGETREE = 1;
+	public final static int VIEW_DASHBOARD = 2;
+	public final static int DYNAMVIEW_TOPOSCENE = 3;
+	public final static int VIEW_PROPERTY = 4;
+	public final static int VIEW_RTSCENEST = 5;
 }
