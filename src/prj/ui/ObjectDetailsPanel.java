@@ -36,21 +36,17 @@ public class ObjectDetailsPanel extends javax.swing.JPanel
     private void initComponents()
     {
 
-        propertySheet = new com.l2fprod.common.propertysheet.PropertySheetPanel(new ObjectDetailsTable());
-
         setName("Form"); // NOI18N
-
-        propertySheet.setName("propertySheet"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(propertySheet, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(propertySheet, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 	/**
@@ -65,7 +61,6 @@ public class ObjectDetailsPanel extends javax.swing.JPanel
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.l2fprod.common.propertysheet.PropertySheetPanel propertySheet;
     // End of variables declaration//GEN-END:variables
 
 }

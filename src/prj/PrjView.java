@@ -23,6 +23,7 @@ import org.jdesktop.application.ResourceMap;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
@@ -111,7 +112,7 @@ public class PrjView extends SingleFrameView {
 		setComponent(mainPanel);
 //		setMenuBar(menuBar);
 //		setStatusBar(statusBar);
-//		setToolBar(toolBar);
+		setToolBar(jToolBar1);
 	}
 	
 	// <editor-fold defaultstate="collapsed" desc="PCL">
@@ -216,13 +217,13 @@ public class PrjView extends SingleFrameView {
 			// laf支持主题，检查当前主题
 			for(Component themeMenu : themeMenus)
 			{
-				if(themeMenu instanceof JRadioButtonMenuItem)
+				if(themeMenu instanceof JMenuItem)
 				{
 					String command =
-							((JRadioButtonMenuItem)themeMenu).getActionCommand();
+							((JMenuItem)themeMenu).getActionCommand();
 					if(GUIUtil.isCurrentTheme(command))
 					{
-						((JRadioButtonMenuItem)themeMenu).setSelected(true);
+						((JMenuItem)themeMenu).setSelected(true);
 						break;
 					}
 				}
@@ -317,7 +318,7 @@ public class PrjView extends SingleFrameView {
 				new ManageTreePanel(), Direction.LEFT);
 		// 对象属性
 		application.addStaticView(Constants.VIEW_PROPERTY,
-				rm.getString("staticview.property"), rm.getIcon("image.details"),
+				"详细信息", rm.getIcon("image.details"),
 				new ObjectDetailsPanel(), Direction.LEFT);
 		//管理树
 //		application.addStaticView(OmcPerspectives.VIEW_MANAGETREE,
@@ -386,10 +387,13 @@ public class PrjView extends SingleFrameView {
 //					rm.getString("staticview.system"), rm.getIcon("image.monitor"),
 //					sm.createSystemMonitorComponent(), Direction.DOWN);
 //		}
-		if(hasPurview(UserPurview.View_BoardState))
+		if(!hasPurview(UserPurview.View_BoardState))
 		{
 			application.addStaticView(Constants.VIEW_RTSCENEST,
-					rm.getString("staticview.board"), rm.getIcon("image.boardState"),
+					"实时信息", rm.getIcon("image.boardState"),
+					new RtSceneSTPanel(), Direction.DOWN);
+			application.addStaticView(6,
+					"实时信息1", rm.getIcon("image.boardState"),
 					new RtSceneSTPanel(), Direction.DOWN);
 		}
 //		if(hasPurview(UserPurview.View_OpenScene))
@@ -462,12 +466,16 @@ public class PrjView extends SingleFrameView {
 		// 设备树、设备属性垂直分割
 		// 中心视图为多Tab页面
 		TabWindow centerWindow = null;
-		if(hasPurview(UserPurview.View_Dashboard))
+		if(!hasPurview(UserPurview.View_Dashboard))
 		{
 			// dashboard视图
 			centerWindow = getTabWindow(centerWindow);
-			centerWindow.addTab(vm.getView(Constants.VIEW_DASHBOARD));
+//			centerWindow.addTab(vm.getView(Constants.VIEW_DASHBOARD));
+			centerWindow.addTab(vm.getView(Constants.VIEW_RTSCENEST));
+			centerWindow.addTab(vm.getView(6));
 		}
+		
+		
 		// 告警
 //		if(hasPurview(UserPurview.View_Alarm))
 //		{
@@ -534,10 +542,10 @@ public class PrjView extends SingleFrameView {
 		//	leftWindow.addTab(vm.getView(OmcPerspectives.VIEW_FILETREE));
 		}
 		//管理树
-		if(hasPurview(UserPurview.View_Manage))
+		if(!hasPurview(UserPurview.View_Manage))
 		{
-		//	leftWindow = getTabWindow(leftWindow);
-		//	leftWindow.addTab(vm.getView(OmcPerspectives.VIEW_MANAGETREE));
+			leftWindow = getTabWindow(leftWindow);
+			leftWindow.addTab(vm.getView(Constants.MANAGETREE));
 		}
 		// 下方视图
 		TabWindow bottomWindow = null;
@@ -631,14 +639,6 @@ public class PrjView extends SingleFrameView {
     {
 
         mainPanel = new javax.swing.JPanel();
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
-        jSeparator10 = new javax.swing.JToolBar.Separator();
-        jButton2 = new javax.swing.JButton();
-        jSeparator11 = new javax.swing.JToolBar.Separator();
-        jButton3 = new javax.swing.JButton();
-        jSeparator12 = new javax.swing.JToolBar.Separator();
-        jButton4 = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         sysMenu = new javax.swing.JMenu();
         dptItem = new javax.swing.JMenuItem();
@@ -715,70 +715,21 @@ public class PrjView extends SingleFrameView {
         jMenu4 = new javax.swing.JMenu();
         jMenuItem25 = new javax.swing.JMenuItem();
         statusBar = new org.jdesktop.swingx.JXStatusBar();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButton1 = new javax.swing.JButton();
+        jSeparator10 = new javax.swing.JToolBar.Separator();
+        jButton2 = new javax.swing.JButton();
+        jSeparator11 = new javax.swing.JToolBar.Separator();
+        jButton3 = new javax.swing.JButton();
+        jSeparator12 = new javax.swing.JToolBar.Separator();
+        jButton4 = new javax.swing.JButton();
 
         mainPanel.setName("mainPanel"); // NOI18N
-
-        jToolBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jToolBar1.setRollover(true);
-        jToolBar1.setName("jToolBar1"); // NOI18N
-
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(PrjView.class);
-        jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
-
-        jSeparator10.setName("jSeparator10"); // NOI18N
-        jToolBar1.add(jSeparator10);
-
-        jButton2.setIcon(resourceMap.getIcon("jButton2.icon")); // NOI18N
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setName("jButton2"); // NOI18N
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton2);
-
-        jSeparator11.setName("jSeparator11"); // NOI18N
-        jToolBar1.add(jSeparator11);
-
-        jButton3.setIcon(resourceMap.getIcon("jButton3.icon")); // NOI18N
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setName("jButton3"); // NOI18N
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton3);
-
-        jSeparator12.setName("jSeparator12"); // NOI18N
-        jToolBar1.add(jSeparator12);
-
-        jButton4.setIcon(resourceMap.getIcon("jButton4.icon")); // NOI18N
-        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setName("jButton4"); // NOI18N
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton4);
-
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 966, Short.MAX_VALUE)
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(511, Short.MAX_VALUE))
-        );
+        mainPanel.setLayout(new java.awt.BorderLayout());
 
         menuBar.setName("menuBar"); // NOI18N
 
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(PrjView.class);
         sysMenu.setText(resourceMap.getString("sysMenu.text")); // NOI18N
         sysMenu.setName("sysMenu"); // NOI18N
 
@@ -1064,14 +1015,19 @@ public class PrjView extends SingleFrameView {
 
         jMenuItem51.setAction(actionMap.get("setLafTheme")); // NOI18N
         jMenuItem51.setText(resourceMap.getString("jMenuItem51.text")); // NOI18N
+        jMenuItem51.setActionCommand(resourceMap.getString("jMenuItem51.actionCommand")); // NOI18N
         jMenuItem51.setName("jMenuItem51"); // NOI18N
         jMenu8.add(jMenuItem51);
 
+        jMenuItem52.setAction(actionMap.get("setLafTheme")); // NOI18N
         jMenuItem52.setText(resourceMap.getString("jMenuItem52.text")); // NOI18N
+        jMenuItem52.setActionCommand(resourceMap.getString("jMenuItem52.actionCommand")); // NOI18N
         jMenuItem52.setName("jMenuItem52"); // NOI18N
         jMenu8.add(jMenuItem52);
 
+        jMenuItem53.setAction(actionMap.get("setLafTheme")); // NOI18N
         jMenuItem53.setText(resourceMap.getString("jMenuItem53.text")); // NOI18N
+        jMenuItem53.setActionCommand(resourceMap.getString("jMenuItem53.actionCommand")); // NOI18N
         jMenuItem53.setName("jMenuItem53"); // NOI18N
         jMenu8.add(jMenuItem53);
 
@@ -1095,6 +1051,51 @@ public class PrjView extends SingleFrameView {
         statusBar.add(new JLabel("当前版本V1.0.0"));
         statusBar.add(new JLabel("最后更新时间2017.03.22"), org.jdesktop.swingx.JXStatusBar.Constraint.ResizeBehavior.FILL);
         statusBar.add(new UserStatusPane());
+
+        jToolBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jToolBar1.setRollover(true);
+        jToolBar1.setName("jToolBar1"); // NOI18N
+
+        jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
+        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setName("jButton1"); // NOI18N
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton1);
+
+        jSeparator10.setName("jSeparator10"); // NOI18N
+        jToolBar1.add(jSeparator10);
+
+        jButton2.setIcon(resourceMap.getIcon("jButton2.icon")); // NOI18N
+        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setName("jButton2"); // NOI18N
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton2);
+
+        jSeparator11.setName("jSeparator11"); // NOI18N
+        jToolBar1.add(jSeparator11);
+
+        jButton3.setIcon(resourceMap.getIcon("jButton3.icon")); // NOI18N
+        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setName("jButton3"); // NOI18N
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton3);
+
+        jSeparator12.setName("jSeparator12"); // NOI18N
+        jToolBar1.add(jSeparator12);
+
+        jButton4.setIcon(resourceMap.getIcon("jButton4.icon")); // NOI18N
+        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
+        jButton4.setFocusable(false);
+        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton4.setName("jButton4"); // NOI18N
+        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton4);
 
         setComponent(mainPanel);
         setMenuBar(menuBar);

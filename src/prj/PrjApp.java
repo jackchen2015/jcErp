@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import org.jdesktop.application.Application;
+import org.jdesktop.swingx.JXFrame;
 import prj.user.LoginAdapter;
 import prj.user.LoginEvent;
 import prj.user.UserLogin;
@@ -30,7 +31,7 @@ public class PrjApp extends SingleFrameApplication {
 	private SQLiteCRUD slc;
 	private String drv = "org.sqlite.JDBC";
 
-	private String url = "jdbc:sqlite:F:\\person\\prj\\src\\erpdb.db";
+	private String url = "jdbc:sqlite:E:\\swingPrj\\prj\\src\\erpdb.db";
 
     /**
      * At startup create and show the main frame of the application.
@@ -55,7 +56,13 @@ public class PrjApp extends SingleFrameApplication {
 		frameLogin.setVisible(true);
 
 	}
-	
+
+	@Override
+	protected JFrame createMainFrame()
+	{
+		return new JXFrame();
+	}	
+
 	private void createDbConnect()
 	{
 		try {
