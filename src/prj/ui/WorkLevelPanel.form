@@ -111,6 +111,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="jTable1" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable1MouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -144,9 +147,6 @@
         <Property name="text" type="java.lang.String" resourceKey="jButton1.text"/>
         <Property name="name" type="java.lang.String" value="jButton1" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">
       <Properties>
@@ -192,6 +192,9 @@
         <Property name="text" type="java.lang.String" resourceKey="idKey.text"/>
         <Property name="name" type="java.lang.String" value="idKey" noResource="true"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="idKey.setVisible(false);"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

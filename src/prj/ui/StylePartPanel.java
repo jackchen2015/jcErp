@@ -92,6 +92,13 @@ public class StylePartPanel extends javax.swing.JPanel
             }
         ));
         jTable1.setName("jTable1"); // NOI18N
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(StylePartPanel.class);
@@ -124,6 +131,7 @@ public class StylePartPanel extends javax.swing.JPanel
 
         idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
         idKey.setName("idKey"); // NOI18N
+        idKey.setVisible(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -181,6 +189,20 @@ public class StylePartPanel extends javax.swing.JPanel
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jTable1MouseClicked
+    {//GEN-HEADEREND:event_jTable1MouseClicked
+ 		if(javax.swing.SwingUtilities.isLeftMouseButton(evt) 
+			&& evt.getClickCount() == 2)
+		{
+			selId = jTable1.getSelectedRow();
+			int modelIndex = jTable1.convertRowIndexToModel(selId);
+			List<String> rowd = result.get(modelIndex);
+			idKey.setText(rowd.get(0));
+			jTextField1.setText(rowd.get(1));
+			jTextField2.setText(rowd.get(2));
+		}        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

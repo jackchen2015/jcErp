@@ -139,6 +139,7 @@ public class DptPanel extends javax.swing.JPanel
 
         idKey.setText(resourceMap.getString("idKey.text")); // NOI18N
         idKey.setName("idKey"); // NOI18N
+        idKey.setVisible(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -278,7 +279,7 @@ public class DptPanel extends javax.swing.JPanel
 			return;
 		}
 		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
-		boolean isSucc = sqlOpt.update(Constants.CONF_DEVICETYPE, idKey.getText(), "id", new String[]{"name", "dptdesc"}, 
+		boolean isSucc = sqlOpt.update(Constants.CONF_DPT, idKey.getText(), "id", new String[]{"name", "dptdesc"}, 
 				new String[]{name, dptdesc});
 		if(isSucc)
 		{
