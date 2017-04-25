@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import org.jdesktop.application.Application;
 import org.jdesktop.swingx.JXFrame;
@@ -31,7 +30,7 @@ public class PrjApp extends SingleFrameApplication {
 	private SQLiteCRUD slc;
 	private String drv = "org.sqlite.JDBC";
 
-	private String url = "jdbc:sqlite:E:\\swingPrj\\prj\\src\\erpdb.db";
+	private String url = "jdbc:sqlite:src/erpdb.db";
 
     /**
      * At startup create and show the main frame of the application.

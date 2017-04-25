@@ -20,7 +20,7 @@ public class DB2Access {
 
 	private String drv = "org.sqlite.JDBC";
 
-	private String url = "jdbc:sqlite:erpdb.db";
+	private String url = "jdbc:sqlite::resource:erpdb.db";
 
 	private Connection conn = null;
 

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="name" type="java.lang.String" value="Dialog_UserEditor_6" noResource="true"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosed" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosed"/>
+  </Events>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblUserName" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblAliasName" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRealName" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblValidTime" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblUserGroup" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblConfirmPass" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPass" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblPassValidTime" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblWorkplace" alignment="0" min="-2" max="-2" attributes="1"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="tfWorkplace" max="32767" attributes="3"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="tfUserName" max="32767" attributes="2"/>
+                          <Component id="tfRealName" alignment="0" max="32767" attributes="2"/>
+                          <Component id="tfAliasName" alignment="0" max="32767" attributes="1"/>
+                          <Component id="dateValidTime" alignment="0" pref="217" max="32767" attributes="2"/>
+                          <Component id="tfPassValidTime" alignment="0" max="32767" attributes="3"/>
+                          <Component id="tfPass" alignment="0" max="32767" attributes="2"/>
+                          <Component id="tfConfirmPass" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="tfGroup" max="32767" attributes="2"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnSelectGroup" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="btnOk" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnQuit" min="-2" pref="57" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblUserName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfUserName" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblRealName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfRealName" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblAliasName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfAliasName" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblValidTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="dateValidTime" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblPassValidTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfPassValidTime" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblPass" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfPass" alignment="3" min="-2" max="-2" attributes="1"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblConfirmPass" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfConfirmPass" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblUserGroup" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfGroup" alignment="3" min="-2" max="-2" attributes="1"/>
+                  <Component id="btnSelectGroup" alignment="3" min="-2" max="-2" attributes="1"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblWorkplace" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfWorkplace" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnOk" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnQuit" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblUserName">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblUserName.text"/>
+        <Property name="name" type="java.lang.String" value="lblUserName" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfUserName">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="tfUserName" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblRealName">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblRealName.text"/>
+        <Property name="name" type="java.lang.String" value="lblRealName" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfRealName">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="tfRealName" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblAliasName">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblAliasName.text"/>
+        <Property name="name" type="java.lang.String" value="lblAliasName" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfAliasName">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="tfAliasName" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblValidTime">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblValidTime.text"/>
+        <Property name="name" type="java.lang.String" value="lblValidTime" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="org.jdesktop.swingx.JXDatePicker" name="dateValidTime">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="dateValidTime" noResource="true"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dateValidTime.setFormats(&quot;yyyy-MM-dd&quot;);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPassValidTime">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblPassValidTime.text"/>
+        <Property name="name" type="java.lang.String" value="lblPassValidTime" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfPassValidTime">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="tfPassValidTime.text"/>
+        <Property name="name" type="java.lang.String" value="tfPassValidTime" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPass">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblPass.text"/>
+        <Property name="name" type="java.lang.String" value="lblPass" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="tfPass">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="tfPass.text"/>
+        <Property name="name" type="java.lang.String" value="tfPass" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblConfirmPass">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblConfirmPass.text"/>
+        <Property name="name" type="java.lang.String" value="lblConfirmPass" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="tfConfirmPass">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="tfConfirmPass.text"/>
+        <Property name="name" type="java.lang.String" value="tfConfirmPass" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblUserGroup">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblUserGroup.text"/>
+        <Property name="name" type="java.lang.String" value="lblUserGroup" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfGroup">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="name" type="java.lang.String" value="tfGroup" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSelectGroup">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.hongxin.omc.ui.user.UserEditor" id="selectUserGroup" methodName="selectUserGroup"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnSelectGroup.text"/>
+        <Property name="name" type="java.lang.String" value="btnSelectGroup" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnOk">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.hongxin.omc.ui.user.UserEditor" id="saveUser" methodName="saveUser"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnOk.text"/>
+        <Property name="name" type="java.lang.String" value="btnOk" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnQuit">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.hongxin.omc.ui.user.UserEditor" id="exit" methodName="exit"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="btnQuit" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWorkplace">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblWorkplace.text"/>
+        <Property name="name" type="java.lang.String" value="lblWorkplace" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfWorkplace">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="tfWorkplace" noResource="true"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>
