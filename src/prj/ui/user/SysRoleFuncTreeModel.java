@@ -3,16 +3,16 @@
  * Wuhan, Hubei, China. All rights reserved.
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
-import com.hongxin.omc.operation.Purview;
-import com.hongxin.omc.operation.UserPurview;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import prj.user.Purview;
+import prj.user.UserPurview;
 
 /**
  * 角色权限tree模型。

@@ -3,13 +3,8 @@
  * Wuhan, Hubei, China. All rights reserved.
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
-import com.hongxin.omc.operation.UserSession;
-import com.hongxin.omc.ui.OmcPreferences;
-import com.hongxin.omc.ui.services.LoginService;
-import com.hongxin.omc.ui.services.ServiceConstants;
-import com.hongxin.omc.ui.services.UserModule;
 import com.hongxin.saf.SingleFrameApplication;
 import com.hongxin.util.service.ServiceUtils;
 import java.util.List;
@@ -32,36 +27,10 @@ public class UserModuleImpl implements UserModule
 	}
 
 	@Override
-	public void showDeviceGroupMgmt()
-	{
-		DeviceGroupPanel.showDialog();
-	}
-
-	@Override
-	public void lockSession()
-	{
-		LockSession.getInstance().lock();
-	}
-
-	@Override
-	public void showOnlineUser()
-	{
-		OnlineUserPanel.showDialog();
-	}
-
-	@Override
 	public void showPersonalInfo()
 	{
 		PersonalInfo psnInfo = new PersonalInfo(SingleFrameApplication.getInstance().getMainFrame(), true);
 		psnInfo.showDialog();
-	}
-
-	@Override
-	public void showUserCryptogramPolicy()
-	{
-		JDialog window = UserCryptogramPolicy.getInstance(SingleFrameApplication.
-				getInstance().getMainFrame(), true);
-		SingleFrameApplication.getInstance().show(window);
 	}
 
 	@Override
@@ -93,24 +62,6 @@ public class UserModuleImpl implements UserModule
 		return IdentityValidate.showDialog();
 	}
 	
-	@Override
-	public void logout()
-	{
-		boolean canLogout = true;
-		// 已登录并且需要进行身份验证时，显示身份认证界面
-		if(UserSession.getInstance().getUserInfo().isEntered()
-				&& OmcPreferences.getInstance().getBoolean("sys.logout.validate", Boolean.TRUE))
-		{
-			canLogout = showIdentityValidateDialog();
-		}
-		if(canLogout)
-		{
-			LoginService loginService =
-					(LoginService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_LOGIN);
-			// 注销/主动/通知
-			loginService.logout(false, true, true);
-		}
-	}
 	
 	@Override
 	public List<Integer> showUserSelectionDialog(List<Integer> listUserId)
@@ -119,9 +70,4 @@ public class UserModuleImpl implements UserModule
 		return dialog.showDialog(listUserId);
 	}
 
-	@Override
-	public JComponent createLoginComponent()
-	{
-		return new LoginPanel();
-	}
 }

@@ -2,9 +2,8 @@
  * Copyright 2009 Hongxin Telecommunication Technologies Co, Ltd.,
  * Wuhan, Hubei, China. All rights reserved.
  */
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
-import com.hongxin.omc.protocol.SystemItem;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 import java.util.Map;

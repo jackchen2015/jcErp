@@ -8,12 +8,8 @@
  *
  * Created on 2009-8-20, 15:13:20
  */
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
-import com.hongxin.omc.ui.util.GUIUtil;
-import com.hongxin.omc.user.protocol.Role;
-import com.hongxin.omc.user.protocol.UserGroup;
-import com.hongxin.omc.util.OmcConstants;
 import com.hongxin.saf.SingleFrameApplication;
 import com.hongxin.util.GUIUtils;
 import java.util.List;
@@ -25,6 +21,9 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import java.util.ArrayList;
 import org.jdesktop.application.Application;
+import prj.user.po.Role;
+import prj.user.po.UserGroup;
+import util.GUIUtil;
 
 /**
  * 用户组选择界面
@@ -144,18 +143,7 @@ public class UserGroupSelect extends javax.swing.JPanel
 			vector.add(group.getName());
 			vector.add(getRoleText(group));
 			vector.add(group.getDescription());
-			//锁定状态
-			switch(group.getLockStatus())
-			{
-				//未锁定
-				case OmcConstants.ugs_normal:
-					vector.add(rm.getString("userGroup.unlock"));
-					break;
-				//锁定
-				case OmcConstants.ugs_locked:
-					vector.add(rm.getString("userGroup.lock"));
-					break;
-			}
+
 			userGroupModel.addRow(vector);
 		}
 	}

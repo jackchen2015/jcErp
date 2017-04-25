@@ -3,10 +3,8 @@
  * Wuhan, Hubei, China. All rights reserved.
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
-import com.hongxin.omc.user.protocol.User;
-import com.hongxin.omc.user.protocol.UserGroup;
 import com.hongxin.omc.ui.common.NodeIndex;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +18,8 @@ import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 import org.jdesktop.swingx.treetable.MutableTreeTableNode;
+import prj.user.po.User;
+import prj.user.po.UserGroup;
 
 /**
  * 用户选择TreeTable模型。

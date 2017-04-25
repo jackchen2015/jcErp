@@ -10,16 +10,12 @@
  */
 package prj.ui.user;
 
-import com.hongxin.component.ComponentUtil;
-import com.hongxin.util.service.ServiceUtils;
 import java.util.ArrayList;
-import javax.swing.table.DefaultTableModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.DefaultListModel;
 import org.jdesktop.application.Application;
 import prj.user.po.Role;
 import prj.user.po.UserGroup;
@@ -214,24 +210,11 @@ public class CurrentUserRight extends javax.swing.JDialog
         mainTabbedPane = new javax.swing.JTabbedPane();
         sysRolePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        sysRoleFuncTree = new com.hongxin.omc.ui.user.SysRoleFuncTree();
-        mmlPanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        mmlPurview = ComponentUtil.createTreeTable(true, false);
-        devicePanel = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        tableDeviceGroup = GUIUtil.createTable();
-        jLabel3 = new javax.swing.JLabel();
-        jDevNum = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        devicePurview = ComponentUtil.createTable(true, false);
-        rootDistrictPanel = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        listRootDistrict = new com.jidesoft.swing.CheckBoxList();
+        sysRoleFuncTree = new prj.ui.user.SysRoleFuncTree();
         btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(CurrentUserRight.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(CurrentUserRight.class);
         setTitle(resourceMap.getString("Dialog_CurrentUserRight.title")); // NOI18N
         setName("Dialog_CurrentUserRight"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter()
@@ -281,119 +264,7 @@ public class CurrentUserRight extends javax.swing.JDialog
 
         mainTabbedPane.addTab(resourceMap.getString("sysRolePanel.TabConstraints.tabTitle"), sysRolePanel); // NOI18N
 
-        mmlPanel.setName("mmlPanel"); // NOI18N
-
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
-
-        mmlPurview.setName("mmlPurview"); // NOI18N
-        jScrollPane2.setViewportView(mmlPurview);
-
-        javax.swing.GroupLayout mmlPanelLayout = new javax.swing.GroupLayout(mmlPanel);
-        mmlPanel.setLayout(mmlPanelLayout);
-        mmlPanelLayout.setHorizontalGroup(
-            mmlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mmlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        mmlPanelLayout.setVerticalGroup(
-            mmlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mmlPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        mainTabbedPane.addTab(resourceMap.getString("mmlPanel.TabConstraints.tabTitle"), mmlPanel); // NOI18N
-
-        devicePanel.setName("devicePanel"); // NOI18N
-
-        jScrollPane4.setName("jScrollPane4"); // NOI18N
-
-        tableDeviceGroup.setModel(new DeviceGroupTableModel());
-        tableDeviceGroup.setName("tableDeviceGroup"); // NOI18N
-        jScrollPane4.setViewportView(tableDeviceGroup);
-        // 渲染器
-        tableDeviceGroup.getColumnModel().getColumn(2).setCellRenderer(new DeviceFilterRenderer());
-        // 不允许编辑
-        ((DeviceGroupTableModel)tableDeviceGroup.getModel()).setEditable(false);
-
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
-
-        jDevNum.setText(resourceMap.getString("jDevNum.text")); // NOI18N
-        jDevNum.setName("jDevNum"); // NOI18N
-        jDevNum.setPreferredSize(new java.awt.Dimension(60, 15));
-
-        jScrollPane3.setName("jScrollPane3"); // NOI18N
-        jScrollPane3.setPreferredSize(new java.awt.Dimension(400, 240));
-
-        devicePurview.setAutoCreateRowSorter(true);
-        devicePurview.setModel(new DevModel());
-        devicePurview.setName("devicePurview"); // NOI18N
-        jScrollPane3.setViewportView(devicePurview);
-
-        javax.swing.GroupLayout devicePanelLayout = new javax.swing.GroupLayout(devicePanel);
-        devicePanel.setLayout(devicePanelLayout);
-        devicePanelLayout.setHorizontalGroup(
-            devicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, devicePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(devicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, devicePanelLayout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDevNum, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        devicePanelLayout.setVerticalGroup(
-            devicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(devicePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(devicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(jDevNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        mainTabbedPane.addTab(resourceMap.getString("devicePanel.TabConstraints.tabTitle"), devicePanel); // NOI18N
-
-        rootDistrictPanel.setName("rootDistrictPanel"); // NOI18N
-
-        jScrollPane5.setName("jScrollPane5"); // NOI18N
-
-        listRootDistrict.setModel(new DefaultListModel());
-        listRootDistrict.setCheckBoxEnabled(false);
-        listRootDistrict.setName("listRootDistrict"); // NOI18N
-        jScrollPane5.setViewportView(listRootDistrict);
-
-        javax.swing.GroupLayout rootDistrictPanelLayout = new javax.swing.GroupLayout(rootDistrictPanel);
-        rootDistrictPanel.setLayout(rootDistrictPanelLayout);
-        rootDistrictPanelLayout.setHorizontalGroup(
-            rootDistrictPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rootDistrictPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        rootDistrictPanelLayout.setVerticalGroup(
-            rootDistrictPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rootDistrictPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        mainTabbedPane.addTab(resourceMap.getString("rootDistrictPanel.TabConstraints.tabTitle"), rootDistrictPanel); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(CurrentUserRight.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(CurrentUserRight.class, this);
         btnExit.setAction(actionMap.get("exit")); // NOI18N
         btnExit.setText(resourceMap.getString("btnExit.text")); // NOI18N
         btnExit.setName("btnExit"); // NOI18N
@@ -458,44 +329,17 @@ public class CurrentUserRight extends javax.swing.JDialog
 		{
 			listGroupName.clear();
 		}
-		if(listDeviceId != null)
-		{
-			listDeviceId.clear();
-		}
-		if(listDeviceGroupId != null)
-		{
-			listDeviceGroupId.clear();
-		}
-		if(listMmlId != null)
-		{
-			listMmlId.clear();
-		}
-		if(listDistrictId != null)
-		{
-			listDistrictId.clear();
-		}
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
-    private javax.swing.JPanel devicePanel;
-    private javax.swing.JTable devicePurview;
-    private DefaultTableModel devModel;
-    private javax.swing.JLabel jDevNum;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JLabel lblName;
-    private com.jidesoft.swing.CheckBoxList listRootDistrict;
     private javax.swing.JTabbedPane mainTabbedPane;
-    private javax.swing.JPanel mmlPanel;
-    private org.jdesktop.swingx.JXTreeTable mmlPurview;
-    private javax.swing.JPanel rootDistrictPanel;
+    /*
     private com.hongxin.omc.ui.user.SysRoleFuncTree sysRoleFuncTree;
+    */
+    private prj.ui.user.SysRoleFuncTree sysRoleFuncTree;
     private javax.swing.JPanel sysRolePanel;
-    private javax.swing.JTable tableDeviceGroup;
     private javax.swing.JLabel tfName;
     // End of variables declaration//GEN-END:variables
 

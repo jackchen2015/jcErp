@@ -41,6 +41,7 @@ import org.jdesktop.swingx.decorator.SearchPredicate;
 import org.jdesktop.swingx.search.PatternModel;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
+import prj.ui.basic.DefaultDataExportTask;
 import prj.user.po.Role;
 import prj.user.po.User;
 import prj.user.po.UserGroup;
@@ -585,7 +586,7 @@ public class UserManage extends javax.swing.JPanel
 			"Jk123!", "Jk123!"
 		};
 		// 编辑用户操作
-		OmcProcessor.process(Command.user, Command.modifyPassword, passwords);
+//		OmcProcessor.process(Command.user, Command.modifyPassword, passwords);
 	}
 
 	/**
@@ -604,7 +605,7 @@ public class UserManage extends javax.swing.JPanel
 		User userCopy = userInfo.clone();
 		// 在线用户和缺省管理用户不可编辑
 		UserEditor window =	new UserEditor(SingleFrameApplication.getInstance().getMainFrame(), 
-				true, userInfo.getStatus() != OmcConstants.us_online && userInfo.getId() != 0, 
+				true, true, 
 				userCopy, listUserGroup, listRole);
 		SingleFrameApplication.getInstance().show(window);
 		if(window.isok)
@@ -632,245 +633,7 @@ public class UserManage extends javax.swing.JPanel
 		//用户实名
 		String name = userInfo.getRealName();
 		//编辑用户操作
-		OmcProcessor.process(Command.user, Command.modifyUserInfo, name);
-	}
-
-	/**
-	 * 锁定用户组
-	 */
-	@Action
-	public void lockUser()
-	{
-		// 获得选中的用户
-		List<User> listSelectedUser = getSelectedUser();
-		if(listSelectedUser.isEmpty())
-		{
-			JOptionPane.showMessageDialog(null, 
-					rm.getString("mb.text.selectuser"), 
-					rm.getString("msg.prompt"), 
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		for(User user : listSelectedUser)
-		{
-			// 不能锁定自己
-			if(UserSession.getInstance().getUserInfo().getName().equalsIgnoreCase(user.getName()))
-			{
-				JOptionPane.showMessageDialog(this, 
-						rm.getString("mb.cannotLockUnlock"), 
-						rm.getString("msg.error"), 
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			// 检查状态，在线用户不允许锁定
-			if(user.getStatus() == OmcConstants.us_online)
-			{
-				JOptionPane.showMessageDialog(this, 
-						rm.getString("mb.lock.online.disable"), 
-						rm.getString("msg.error"), 
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		// 确认操作
-		int type = JOptionPane.showConfirmDialog(null, 
-				rm.getString("msg.lock.unlock.confirm"), 
-				rm.getString("msg.confirm"), 
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE);
-		if(type != JOptionPane.YES_OPTION)
-		{
-			return;
-		}
-		// 输入参数
-		List<String> input = new ArrayList();
-		for(User user : listSelectedUser)
-		{
-			input.add(user.getName());
-		}
-		// 进行解锁/锁定操作
-		ProcessData out = OmcProcessor.process(Command.user, Command.lockUser, 
-				input);
-		// 根据操作结果输出用户提示
-		if(out.getData() != null)
-		{
-			int[] stateArray = (int[])out.getData();
-			StringBuilder sbd = new StringBuilder();
-			sbd.append("<html>");
-			for(int i = stateArray.length - 1; i >= 0; i--)
-			{
-				switch(stateArray[i])
-				{
-					case 0:
-						sbd.append(rm.getString("mb.user.unlock", listSelectedUser.get(i).getName()));
-						listSelectedUser.get(i).setState(0);
-						break;
-					default:
-						sbd.append(rm.getString("mb.user.lock", listSelectedUser.get(i).getName()));
-						listSelectedUser.get(i).setState(1);
-						break;
-				}
-				sbd.append("<br>");
-			}
-			sbd.append("</html>");
-			JOptionPane.showMessageDialog(null, 
-					sbd.toString(), 
-					rm.getString("msg.prompt"), 
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		JOptionPane.showMessageDialog(null, 
-				rm.getString("msg.lock.unlock.error"), 
-				rm.getString("msg.error"), 
-				JOptionPane.ERROR_MESSAGE);
-	}
-
-	/**
-	 * 复制用户
-	 */
-	@Action
-	public void copyUser()
-	{
-		// 获得选中的用户节点对象
-		User userInfo = getSelectUserNode();
-		if(userInfo == null)
-		{
-			return;
-		}
-		// 创建拷贝用户对象
-		CopyUser copyUser = new CopyUser();
-		// 被拷贝的用户名
-		copyUser.setCopyUserName(userInfo.getName());
-		CopyUserDialog window =
-				new CopyUserDialog(SingleFrameApplication.getInstance().getMainFrame(), true, copyUser);
-		SingleFrameApplication.getInstance().show(window);
-		// 判断是否处理成功
-		if(window.isok)
-		{
-			// 复制用户操作
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.copyUser, copyUser);
-			// 根据状态，提示信息
-			switch(out.getState())
-			{
-				case 0:
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.copyuser.error"), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 1:
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.copyuser.success"), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					// 设置新增用户ID
-					User newUser = userInfo.clone();
-					newUser.setName(copyUser.getName());
-					newUser.setId(Integer.parseInt(out.getData().toString()));
-					// 清除登录时间和别名
-					newUser.setLastLoginTime(null);
-					newUser.setAliasName(null);
-					newUser.setStatus(OmcConstants.us_offline);
-					// 刷新树
-					listUser.add(newUser);
-					createUserTable();
-					break;
-				case 2:
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.username.repeat"), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 4:
-					// 用户名与用户别名重复
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.username.alias.repeat"), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 7:
-					// 未找到被拷贝用户
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.userNotExist"), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 12:
-					// 超过用户总数限制
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.usercount.overflow"), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-			}
-		}
-	}
-
-	/**
-	 * 强制用户下线
-	 */
-	@Action
-	public void forceUserOffLine()
-	{
-		// 获得选中的用户节点对象
-		User userInfo = getSelectUserNode();
-		if(userInfo == null)
-		{
-			return;
-		}
-		// 如果选择的用户不在线，则不允许
-		if(userInfo.getStatus() != OmcConstants.us_online)
-		{
-			JOptionPane.showMessageDialog(this, 
-					rm.getString("mb.notOnLine"), 
-					rm.getString("mb.tip"), 
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		// 如果选择的用户是自己
-		if(userInfo.getName().equals(UserSession.getInstance().getUserInfo().getName()))
-		{
-			JOptionPane.showMessageDialog(this, 
-					rm.getString("mb.currentUserCanNotForceOffLine"), 
-					rm.getString("mb.tip"), 
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		// 获取选中的用户名
-		String userName = userInfo.getName();
-		// 提示用户确认,并获得用户操作0:确认1:取消
-		int type = JOptionPane.showConfirmDialog(this, 
-				rm.getString("mb.text.forceOffLine",userName) , 
-				rm.getString("mb.tip"), 
-				JOptionPane.YES_NO_OPTION);
-		if(type == 0)
-		{
-			// 执行操作
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.forceOffline, userName);
-			// 根据操作结果输出用户提示
-			switch(out.getState())
-			{
-				// 错误
-				case 0:
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.text.forceOffLine.error",userName), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 1:
-				// 成功
-					JOptionPane.showMessageDialog(this, 
-							rm.getString("mb.text.forceOffLine.success",userName), 
-							rm.getString("mb.tip"), 
-							JOptionPane.INFORMATION_MESSAGE);
-					//刷新树
-//					listSelectedUser.remove(userInfo);//强制下线，并不代表要从树中删除用户。
-					createUserTable();
-					break;
-			}
-		}
+//		OmcProcessor.process(Command.user, Command.modifyUserInfo, name);
 	}
 
 	/**
@@ -907,150 +670,56 @@ public class UserManage extends javax.swing.JPanel
 			input.add(user.getName());
 		}
 		// 执行删除操作
-		ProcessData out = OmcProcessor.process(Command.user, 
-				Command.deleteUser, input);
+//		ProcessData out = OmcProcessor.process(Command.user, 
+//				Command.deleteUser, input);
 		// 0/失败或用户在线
 		// 1/成功
 		// 根据操作结果输出用户提示
-		if(out.getData() != null)
-		{
-			int[] stateArray = (int[])out.getData();
-			StringBuilder sbd = new StringBuilder();
-			boolean refresh = false;
-			sbd.append("<html>");
-			for(int i = stateArray.length - 1; i >= 0; i--)
-			{
-				switch(stateArray[i])
-				{
-					case 0:
-						sbd.append(rm.getString("mb.text.deluserinfo.error", listSelectedUser.get(i).getName()));
-						break;
-					case 1:
-						sbd.append(rm.getString("mb.text.deluserinfo.success", listSelectedUser.get(i).getName()));
-						// 从缓存删除
-						refresh = true;
-						this.listUser.remove(listSelectedUser.get(i));
-						break;
-					case 6:
-						sbd.append(rm.getString("mb.useronline", listSelectedUser.get(i).getName()));
-						break;
-					case UserConstants.remove_user_group_forbidden:
-						sbd.append(rm.getString("msg.del.super.forbid", listSelectedUser.get(i).getName()));
-						break;
-				}
-				sbd.append("<br>");
-			}
-			sbd.append("</html>");
-			if(refresh)
-			{
-				createUserTable();
-			}
-			JOptionPane.showMessageDialog(null, 
-					sbd.toString(), 
-					rm.getString("msg.prompt"), 
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
+//		if(out.getData() != null)
+//		{
+//			int[] stateArray = (int[])out.getData();
+//			StringBuilder sbd = new StringBuilder();
+//			boolean refresh = false;
+//			sbd.append("<html>");
+//			for(int i = stateArray.length - 1; i >= 0; i--)
+//			{
+//				switch(stateArray[i])
+//				{
+//					case 0:
+//						sbd.append(rm.getString("mb.text.deluserinfo.error", listSelectedUser.get(i).getName()));
+//						break;
+//					case 1:
+//						sbd.append(rm.getString("mb.text.deluserinfo.success", listSelectedUser.get(i).getName()));
+//						// 从缓存删除
+//						refresh = true;
+//						this.listUser.remove(listSelectedUser.get(i));
+//						break;
+//					case 6:
+//						sbd.append(rm.getString("mb.useronline", listSelectedUser.get(i).getName()));
+//						break;
+//					case UserConstants.remove_user_group_forbidden:
+//						sbd.append(rm.getString("msg.del.super.forbid", listSelectedUser.get(i).getName()));
+//						break;
+//				}
+//				sbd.append("<br>");
+//			}
+//			sbd.append("</html>");
+//			if(refresh)
+//			{
+//				createUserTable();
+//			}
+//			JOptionPane.showMessageDialog(null, 
+//					sbd.toString(), 
+//					rm.getString("msg.prompt"), 
+//					JOptionPane.INFORMATION_MESSAGE);
+//			return;
+//		}
 		JOptionPane.showMessageDialog(null, 
 				rm.getString("msg.delete.error"), 
 				rm.getString("msg.error"), 
 				JOptionPane.ERROR_MESSAGE);
 	}
 
-	/**
-	 * 设备用户
-	 */
-	@Action(block = Task.BlockingScope.ACTION)
-	public Task deviceUser()
-	{
-		// 获得选中的用户节点对象
-		User userInfo = getSelectUserNode();
-		if(userInfo == null)
-		{
-			return null;
-		}
-		// 显示设备用户配置界面
-		DeviceUserPanel dup = new DeviceUserPanel(userInfo);
-		if(!dup.showDialog(true))
-		{
-			// 取消配置
-			return null;
-		}
-		// 保存配置
-		return new SubmitDeviceUserTask(dup.getDeviceAndUserList());
-	}
-
-	/**
-	 * 保存设备用户配置任务。
-	 */
-    private class SubmitDeviceUserTask extends AsynBlockTask<Object, Void> 
-	implements ProcessCallback
-	{
-		/**
-		 * 设备用户配置。
-		 */
-		private List<DeviceAndUser> listDeviceUser;
-		/**
-		 * 操作结果。
-		 */
-		private ProcessData output;
-		
-        SubmitDeviceUserTask(List<DeviceAndUser> listDeviceUser)
-		{
-            super(Application.getInstance(), OmcConstants.log_timeout);
-			setTitle(SpeedUtil.getCommandName(Command.user, Command.setDeviceUser));
-            this.listDeviceUser = listDeviceUser;
-        }
-		
-        @Override
-		protected Object doInBackground()
-		{
-			// 执行保存操作
-			OmcProcessor.process(Command.user, Command.setDeviceUser, listDeviceUser, this);
-			waitForReady();
-			return null;
-        }
-		
-		@Override
-		public void processCompleted(ProcessData out)
-		{
-			this.output = out;
-			setTaskFinished(true);
-		}
-		
-        @Override
-		protected void succeeded(Object result)
-		{
-            // 0，失败
-            // 1，重名
-            // 2，成功
-            switch(output.getState())
-            {
-				//失败
-				case 0:
-					JOptionPane.showMessageDialog(null, 
-					rm.getString("mb.save.error"), 
-					rm.getString("mb.tip"), 
-					JOptionPane.INFORMATION_MESSAGE);
-				break;
-				//重复
-				case 2:
-					JOptionPane.showMessageDialog(null, 
-					rm.getString("mb.deviceUser.repeat"), 
-					rm.getString("mb.tip"), 
-					JOptionPane.INFORMATION_MESSAGE);
-				break;
-				//成功
-				case 1:
-					JOptionPane.showMessageDialog(null, 
-					rm.getString("mb.save.success"), 
-					rm.getString("mb.tip"), 
-					JOptionPane.INFORMATION_MESSAGE);
-				break;
-            }
-        }
-    }
-	
 	@Action
 	public Task export()
 	{
@@ -1072,25 +741,6 @@ public class UserManage extends javax.swing.JPanel
 		TableModelRecordSet recordSet = new TableModelRecordSet(userTable.getModel());
 		return new DefaultDataExportTask(listColumn, recordSet, null);
 	}
-
-    private class ExportTask extends org.jdesktop.application.Task<Object, Void> {
-        ExportTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ExportTask fields, here.
-            super(app);
-        }
-        @Override protected Object doInBackground() {
-            // Your Task's code here.  This method runs
-            // on a background thread, so don't reference
-            // the Swing GUI from here.
-            return null;  // return your result
-        }
-        @Override protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-        }
-    }
 
 	/** This method is called from within the constructor to
 	 * initialize the form.

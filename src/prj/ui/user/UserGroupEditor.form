@@ -7,9 +7,9 @@
         <Property name="text" type="java.lang.String" resourceKey="cbSelectAllFunction.text"/>
         <Property name="name" type="java.lang.String" value="cbSelectAllFunction" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSelectAllFunctionActionPerformed"/>
-      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="UserGroupEditor_cbSelectAllFunction"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="functionTableScrollPane">
       <Properties>
@@ -45,9 +45,6 @@
         </Property>
         <Property name="name" type="java.lang.String" value="cbCheckAll" noResource="true"/>
       </Properties>
-      <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbCheckAllItemStateChanged"/>
-      </Events>
     </Component>
   </NonVisualComponents>
   <Properties>
@@ -123,8 +120,6 @@
                           <Component id="mainTabbedPane" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnExport" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btnOk" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -163,7 +158,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnCancel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnOk" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnExport" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -211,9 +205,6 @@
               <StringArray count="0"/>
             </Property>
             <Property name="name" type="java.lang.String" value="cmbGroupType" noResource="true"/>
-            <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new ConverterRenderer(UserGroupTypeConverter.instance)" type="code"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblGroupLevel">
@@ -229,9 +220,6 @@
               <StringArray count="0"/>
             </Property>
             <Property name="name" type="java.lang.String" value="cmbGroupLevel" noResource="true"/>
-            <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new ConverterRenderer(UserGroupLevelConverter.instance)" type="code"/>
-            </Property>
           </Properties>
         </Component>
         <Container class="javax.swing.JTabbedPane" name="mainTabbedPane">
@@ -261,382 +249,28 @@
                           <Component id="btnSelectRole" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="454" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" pref="497" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jScrollPane2" pref="352" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                          <EmptySpace pref="368" max="32767" attributes="0"/>
                           <Component id="btnSelectRole" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="jScrollPane2" noResource="true"/>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="com.hongxin.omc.ui.user.SysRoleFuncTree" name="sysRoleFuncTree">
-                      <Properties>
-                        <Property name="checkBoxEnabled" type="boolean" value="false"/>
-                        <Property name="name" type="java.lang.String" value="sysRoleFuncTree" noResource="true"/>
-                        <Property name="rootVisible" type="boolean" value="false"/>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JButton" name="btnSelectRole">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.hongxin.omc.ui.user.UserGroupEditor" id="selectSysRole" methodName="selectSysRole"/>
-                    </Property>
-                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[2, 4, 2, 4]"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="btnSelectRole" noResource="true"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="commandPurviewPanel">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="commandPurviewPanel" noResource="true"/>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="MML&#x547d;&#x4ee4;&#x6743;&#x9650;">
-                    <Property name="tabTitle" type="java.lang.String" resourceKey="commandPurviewPanel.TabConstraints.tabTitle"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbSelectAllCommand" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="commandTableScrollPane" alignment="0" pref="505" max="32767" attributes="0"/>
+                      <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" min="-2" pref="362" max="-2" attributes="0"/>
+                              <EmptySpace pref="30" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="commandTableScrollPane" pref="358" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="cbSelectAllCommand" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="commandTableScrollPane">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="commandTableScrollPane" noResource="true"/>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="org.jdesktop.swingx.JXTreeTable" name="treeTableCommand">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="treeTableCommand" noResource="true"/>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createTreeTable(true, false)"/>
-                      </AuxValues>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JCheckBox" name="cbSelectAllCommand">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="cbSelectAllCommand.text"/>
-                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[0, 0, 0, 0]"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbSelectAllCommand" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSelectAllCommandActionPerformed"/>
-                  </Events>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="tr069PurviewPanel">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="tr069PurviewPanel" noResource="true"/>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="TR069&#x547d;&#x4ee4;&#x6743;&#x9650;">
-                    <Property name="tabTitle" type="java.lang.String" resourceKey="tr069PurviewPanel.TabConstraints.tabTitle"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbSelectAllTr069Command" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="commandTableScrollPane1" alignment="0" pref="505" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="commandTableScrollPane1" pref="358" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="cbSelectAllTr069Command" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="commandTableScrollPane1">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="commandTableScrollPane1" noResource="true"/>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="org.jdesktop.swingx.JXTreeTable" name="treeTableTr069Command">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="treeTableTr069Command" noResource="true"/>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createTreeTable(true, false)"/>
-                      </AuxValues>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JCheckBox" name="cbSelectAllTr069Command">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="cbSelectAllTr069Command.text"/>
-                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[0, 0, 0, 0]"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbSelectAllTr069Command" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSelectAllTr069CommandActionPerformed"/>
-                  </Events>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="devicePurviewPanel">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="devicePurviewPanel" noResource="true"/>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="&#x8bbe;&#x5907;&#x6743;&#x9650;">
-                    <Property name="tabTitle" type="java.lang.String" resourceKey="devicePurviewPanel.TabConstraints.tabTitle"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbSelectAllDevice" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="tableDeviceScrollPane" alignment="0" pref="505" max="32767" attributes="0"/>
-                              <Component id="tableGroupScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="lblCount" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lblCountValue" min="-2" pref="111" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="btnSelectDevice" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="tableGroupScrollPane" pref="162" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="btnSelectDevice" max="32767" attributes="1"/>
-                              <Component id="lblCount" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lblCountValue" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="tableDeviceScrollPane" pref="161" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="cbSelectAllDevice" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="tableGroupScrollPane">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="tableGroupScrollPane" noResource="true"/>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JTable" name="tableDeviceGroup">
-                      <Properties>
-                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new DeviceGroupTableModel()" type="code"/>
-                        </Property>
-                        <Property name="name" type="java.lang.String" value="tableDeviceGroup" noResource="true"/>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="// &#x6e32;&#x67d3;&#x5668;&#xa;tableDeviceGroup.getColumnModel().getColumn(2).setCellRenderer(new DeviceFilterRenderer());"/>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="GUIUtil.createTable()"/>
-                      </AuxValues>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JLabel" name="lblCount">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblCount.text"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[42, 15]"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="lblCount" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblCountValue">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblCountValue.text"/>
-                    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[42, 15]"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="lblCountValue" noResource="true"/>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[60, 15]"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="btnSelectDevice">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.hongxin.omc.ui.user.UserGroupEditor" id="queryDevice" methodName="queryDevice"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="btnSelectDevice.text"/>
-                    <Property name="name" type="java.lang.String" value="btnSelectDevice" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Container class="javax.swing.JScrollPane" name="tableDeviceScrollPane">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="tableDeviceScrollPane" noResource="true"/>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JTable" name="tableDevice">
-                      <Properties>
-                        <Property name="autoCreateRowSorter" type="boolean" value="true"/>
-                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new DevModel()" type="code"/>
-                        </Property>
-                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                          <TableColumnModel selectionModel="0"/>
-                        </Property>
-                        <Property name="name" type="java.lang.String" value="tableDevice" noResource="true"/>
-                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                          <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                        </Property>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createTable(true, false)"/>
-                        <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="private DefaultTableModel devModel;"/>
-                      </AuxValues>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JCheckBox" name="cbSelectAllDevice">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="cbSelectAllDevice.text"/>
-                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[0, 0, 0, 0]"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbSelectAllDevice" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSelectAllDeviceActionPerformed"/>
-                  </Events>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="rootDistrictPanel">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="rootDistrictPanel" noResource="true"/>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="&#x6839;&#x5b50;&#x7f51;&#x6743;&#x9650;">
-                    <Property name="tabTitle" type="java.lang.String" resourceKey="rootDistrictPanel.TabConstraints.tabTitle"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="505" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="375" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -652,16 +286,31 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="com.jidesoft.swing.CheckBoxList" name="listRootDistrict">
+                    <Component class="com.hongxin.omc.ui.user.SysRoleFuncTree" name="sysRoleFuncTree">
                       <Properties>
-                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new DefaultListModel()" type="code"/>
-                        </Property>
-                        <Property name="name" type="java.lang.String" value="listRootDistrict" noResource="true"/>
+                        <Property name="checkBoxEnabled" type="boolean" value="false"/>
+                        <Property name="name" type="java.lang.String" value="sysRoleFuncTree" noResource="true"/>
+                        <Property name="rootVisible" type="boolean" value="false"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new prj.ui.user.SysRoleFuncTree()"/>
+                        <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="*/&#xa;private prj.ui.user.SysRoleFuncTree sysRoleFuncTree;"/>
+                        <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="/*"/>
+                      </AuxValues>
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JButton" name="btnSelectRole">
+                  <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="prj.ui.user.UserGroupEditor" id="selectSysRole" methodName="selectSysRole"/>
+                    </Property>
+                    <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+                      <Insets value="[2, 4, 2, 4]"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="btnSelectRole" noResource="true"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -669,7 +318,7 @@
         <Component class="javax.swing.JButton" name="btnOk">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupEditor" id="saveUserGroup" methodName="saveUserGroup"/>
+              <action class="prj.ui.user.UserGroupEditor" id="saveUserGroup" methodName="saveUserGroup"/>
             </Property>
             <Property name="name" type="java.lang.String" value="btnOk" noResource="true"/>
           </Properties>
@@ -677,18 +326,10 @@
         <Component class="javax.swing.JButton" name="btnCancel">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupEditor" id="exit" methodName="exit"/>
+              <action class="prj.ui.user.UserGroupEditor" id="exit" methodName="exit"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnCancel.text"/>
             <Property name="name" type="java.lang.String" value="btnCancel" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnExport">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupEditor" id="export" methodName="export"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="btnExport" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblUserCount">

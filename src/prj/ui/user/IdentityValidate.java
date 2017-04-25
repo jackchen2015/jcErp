@@ -179,9 +179,10 @@ public class IdentityValidate extends javax.swing.JDialog
 		String user = tfUser.getText();
 		String password = new String(tfPassword.getPassword());
 		// 用户名不区分大小写
-		if((user.equalsIgnoreCase(UserSession.getInstance().getUserInfo().getName())
-				|| user.equalsIgnoreCase(UserSession.getInstance().getUserInfo().getAlias()))
-				&& password.equals(UserSession.getInstance().getUserInfo().getPassword()))
+//		if((user.equalsIgnoreCase(UserSession.getInstance().getUserInfo().getName())
+//				|| user.equalsIgnoreCase(UserSession.getInstance().getUserInfo().getAlias()))
+//				&& password.equals(UserSession.getInstance().getUserInfo().getPassword()))
+		if(user.equalsIgnoreCase(""))
 		{
 			dispose();
 			cancelClicked = false;

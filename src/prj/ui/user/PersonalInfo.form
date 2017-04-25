@@ -156,8 +156,9 @@
         <Component class="javax.swing.JButton" name="btnOk">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.PersonalInfo" id="modifyUserInfo" methodName="modifyUserInfo"/>
+              <action class="prj.ui.user.PersonalInfo" id="modifyUserInfo" methodName="modifyUserInfo"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnOk.text"/>
             <Property name="name" type="java.lang.String" value="btnOk" noResource="true"/>
           </Properties>
           <Constraints>
@@ -169,8 +170,9 @@
         <Component class="javax.swing.JButton" name="btnCancel">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.PersonalInfo" id="cancel" methodName="cancel"/>
+              <action class="prj.ui.user.PersonalInfo" id="cancel" methodName="cancel"/>
             </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnCancel.text"/>
             <Property name="name" type="java.lang.String" value="btnCancel" noResource="true"/>
           </Properties>
           <Constraints>

@@ -3,10 +3,9 @@
  * Wuhan, Hubei, China. All rights reserved.
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
 import com.hongxin.component.renderer.TransparentTreeCellRenderer;
-import com.hongxin.omc.util.OmcDictionary;
 import com.hongxin.util.GUIUtils;
 import com.jidesoft.swing.CheckBoxTree;
 import com.jidesoft.swing.TreeSearchable;
@@ -163,7 +162,8 @@ public class SysRoleFuncTree extends CheckBoxTree
 			}
 			else if(node.getUserObject() instanceof Integer)
 			{
-				return OmcDictionary.getInstance().sys_getNameById((Integer)node.getUserObject());
+//				return OmcDictionary.getInstance().sys_getNameById((Integer)node.getUserObject());
+				return "";
 			}
 		}
 		return super.convertValueToText(value, selected, expanded, leaf, row, hasFocus);
@@ -185,7 +185,7 @@ public class SysRoleFuncTree extends CheckBoxTree
 			if(node.getUserObject() instanceof Integer)
 			{
 				setIcon(Application.getInstance().getContext().getResourceMap().getIcon("image.gear"));
-				setText(OmcDictionary.getInstance().sys_getNameById((Integer)node.getUserObject()));
+				setText(node.toString());
 			}
 			else if(node.getUserObject() instanceof String)
 			{

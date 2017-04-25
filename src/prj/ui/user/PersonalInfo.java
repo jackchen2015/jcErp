@@ -5,17 +5,6 @@
  */
 package prj.ui.user;
 
-import com.hongxin.omc.operation.Command;
-import com.hongxin.omc.protocol.UserInfo;
-import com.hongxin.speed.core.ProcessData;
-import com.hongxin.omc.operation.OmcProcessor;
-import com.hongxin.omc.operation.UserSession;
-import com.hongxin.omc.protocol.CryptoGramPolicyInfo;
-import com.hongxin.omc.ui.converter.UserPasswordPolicyConverter;
-import com.hongxin.omc.ui.services.LoginService;
-import com.hongxin.omc.ui.services.ServiceConstants;
-import com.hongxin.omc.user.UserConstants;
-import com.hongxin.omc.util.OmcConstants;
 import com.hongxin.saf.SingleFrameApplication;
 import com.hongxin.util.GUIUtils;
 import com.hongxin.util.service.ServiceUtils;
@@ -40,10 +29,7 @@ public class PersonalInfo extends JDialog
 	 * 原始别名。
 	 */
 	private String originalAlias;
-	/**
-	 * 密码策略。
-	 */
-	private CryptoGramPolicyInfo policy;
+
 	private ResourceMap rm;
 
 	public PersonalInfo(java.awt.Frame parent, boolean modal)
@@ -71,27 +57,11 @@ public class PersonalInfo extends JDialog
 	{
 		// 发送获取当前用户信息命令帧
 		// 同步发送接收数据
-		ProcessData out = OmcProcessor.process(Command.user, Command.getUserInfo, null);
-		if(out.getData() != null)
+//		ProcessData out = OmcProcessor.process(Command.user, Command.getUserInfo, null);
+		if("" != null)
 		{
-			originalAlias = String.valueOf(out.getData()).trim();
+			originalAlias = String.valueOf("");
 			tfAlias.setText(originalAlias);
-		}
-		//获得密码策略
-		out = OmcProcessor.process(Command.user, Command.getUserCryptogramPolicy, null);
-		//判断是否不为Null
-		if(out.getData() != null)
-		{
-			policy = (CryptoGramPolicyInfo)out.getData();
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(this, 
-					rm.getString("mb.getUserCryptogramPolicyData.fail"), 
-					rm.getString("msg.tip"), 
-					JOptionPane.INFORMATION_MESSAGE);
-			//使用默认密码策略
-			policy = CryptoGramPolicyInfo.defaultPolicy();
 		}
 	}
 
@@ -140,107 +110,85 @@ public class PersonalInfo extends JDialog
 		String confirmPassword = new String(tfConfirmPassword.getPassword());
 		String oldPassword = new String(tfOldPassword.getPassword());
 		boolean modifyPassword;
-		int checkResult = policy.modifyPasswordPolicy(oldPassword, newPassword, 
-				confirmPassword, UserSession.getInstance().getUserInfo().getName());
-		if(checkResult == CryptoGramPolicyInfo.normalPolicy)
-		{
-			modifyPassword = true;
-		}
-		else
-		{
-			// 使用安全策略类中的密码校验方法
-			UserPasswordPolicyConverter uppc =
-					new UserPasswordPolicyConverter(policy.getMinLength(), policy.getMaxLength());
-			JOptionPane.showMessageDialog(this,
-					uppc.convertForward(checkResult),
-					rm.getString("msg.error"),
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+
 		// 发送修改当前用户信息命令帧
-		if(modifyAlias)
-		{
-			UserInfo cui = new UserInfo();
-			cui.setName(alias);
-			//发送逻辑
-			ProcessData out =
-					OmcProcessor.process(Command.user, Command.modifyUserInfo, alias);
-			//成功
-			if(out.getState() == OmcConstants.coes_success)
-			{
-				originalAlias = tfAlias.getText();
-				JOptionPane.showMessageDialog(PersonalInfo.this,
-						rm.getString("msg.savealias.succeeded"),
-						rm.getString("this.title"),
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			//失败
-			else
-			{
-				tfAlias.setText(originalAlias);
-				JOptionPane.showMessageDialog(PersonalInfo.this,
-						rm.getString("msg.savealias.fail"),
-						rm.getString("this.title"),
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-		}
+//		if(modifyAlias)
+//		{
+//			UserInfo cui = new UserInfo();
+//			cui.setName(alias);
+//			//发送逻辑
+//			ProcessData out =
+//					OmcProcessor.process(Command.user, Command.modifyUserInfo, alias);
+//			//成功
+//			if(out.getState() == OmcConstants.coes_success)
+//			{
+//				originalAlias = tfAlias.getText();
+//				JOptionPane.showMessageDialog(PersonalInfo.this,
+//						rm.getString("msg.savealias.succeeded"),
+//						rm.getString("this.title"),
+//						JOptionPane.INFORMATION_MESSAGE);
+//			}
+//			//失败
+//			else
+//			{
+//				tfAlias.setText(originalAlias);
+//				JOptionPane.showMessageDialog(PersonalInfo.this,
+//						rm.getString("msg.savealias.fail"),
+//						rm.getString("this.title"),
+//						JOptionPane.INFORMATION_MESSAGE);
+//			}
+//		}
 		// 发送修改用户密码命令帧
-		if(modifyPassword)
-		{
-			//原始密码，新密码
-			String[] passwords =
-			{
-				oldPassword, newPassword
-			};
-			//发送
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.modifyPassword, passwords);
-			// 如果最近5次密码重复
-			if(out.getState() == UserConstants.pass_repeat_too_much)
-			{	
-				JOptionPane.showMessageDialog(PersonalInfo.this,
-						rm.getString("msg.codeRepeatInFive"),
-						rm.getString("this.title"),
-						JOptionPane.ERROR_MESSAGE);
-				tfOldPassword.setText("");
-				tfNewPassword.setText("");
-				tfConfirmPassword.setText("");
-			}
-			//失败
-			else if(out.getState() == OmcConstants.coes_failure)
-			{
-				JOptionPane.showMessageDialog(PersonalInfo.this,
-						rm.getString("msg.savepassword.fail"),
-						rm.getString("this.title"),
-						JOptionPane.INFORMATION_MESSAGE);
-				tfOldPassword.setText("");
-				tfNewPassword.setText("");
-				tfConfirmPassword.setText("");
-			}
-			//成功
-			else if(out.getState() == OmcConstants.coes_success)
-			{
-				JOptionPane.showMessageDialog(PersonalInfo.this,
-						rm.getString("msg.savepassword.succeeded"),
-						rm.getString("this.title"),
-						JOptionPane.INFORMATION_MESSAGE);
-				// 通知密码修改
-				LoginService service =
-						(LoginService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_LOGIN);
-				service.firePasswordChanged(tfNewPassword.getPassword());
-				tfOldPassword.setText("");
-				tfNewPassword.setText("");
-				tfConfirmPassword.setText("");
-			}
-		}
+//		if(modifyPassword)
+//		{
+//			//原始密码，新密码
+//			String[] passwords =
+//			{
+//				oldPassword, newPassword
+//			};
+//			//发送
+//			ProcessData out = OmcProcessor.process(Command.user, 
+//					Command.modifyPassword, passwords);
+//			// 如果最近5次密码重复
+//			if(out.getState() == UserConstants.pass_repeat_too_much)
+//			{	
+//				JOptionPane.showMessageDialog(PersonalInfo.this,
+//						rm.getString("msg.codeRepeatInFive"),
+//						rm.getString("this.title"),
+//						JOptionPane.ERROR_MESSAGE);
+//				tfOldPassword.setText("");
+//				tfNewPassword.setText("");
+//				tfConfirmPassword.setText("");
+//			}
+//			//失败
+//			else if(out.getState() == OmcConstants.coes_failure)
+//			{
+//				JOptionPane.showMessageDialog(PersonalInfo.this,
+//						rm.getString("msg.savepassword.fail"),
+//						rm.getString("this.title"),
+//						JOptionPane.INFORMATION_MESSAGE);
+//				tfOldPassword.setText("");
+//				tfNewPassword.setText("");
+//				tfConfirmPassword.setText("");
+//			}
+//			//成功
+//			else if(out.getState() == OmcConstants.coes_success)
+//			{
+//				JOptionPane.showMessageDialog(PersonalInfo.this,
+//						rm.getString("msg.savepassword.succeeded"),
+//						rm.getString("this.title"),
+//						JOptionPane.INFORMATION_MESSAGE);
+//				// 通知密码修改
+//				LoginService service =
+//						(LoginService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_LOGIN);
+//				service.firePasswordChanged(tfNewPassword.getPassword());
+//				tfOldPassword.setText("");
+//				tfNewPassword.setText("");
+//				tfConfirmPassword.setText("");
+//			}
+//		}
 		//如果密码也不修改，提示什么都没修改
-		if(!modifyAlias && !modifyPassword)
-		{
-			JOptionPane.showMessageDialog(this,
-					rm.getString("msg.nothingNeedSave"),
-					rm.getString("msg.tip"),
-					JOptionPane.ERROR_MESSAGE);
-		}
+
 	}
 	//控制输入长度不超过20字符的模型
 	class ContentControlDocument extends DefaultStyledDocument
@@ -285,7 +233,8 @@ public class PersonalInfo extends JDialog
 	 * always regenerated by the Form Editor.
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         mainPanel = new javax.swing.JPanel();
@@ -301,12 +250,12 @@ public class PersonalInfo extends JDialog
         btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(PersonalInfo.class);
-        setTitle(resourceMap.getString("PsonInfo.title")); // NOI18N
         setName("personalInfoForm"); // NOI18N
         setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+        addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            public void windowClosing(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosing(evt);
             }
         });
@@ -315,7 +264,6 @@ public class PersonalInfo extends JDialog
         mainPanel.setLayout(new java.awt.GridBagLayout());
 
         lblAlias.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblAlias.setText(resourceMap.getString("lblAlias.text")); // NOI18N
         lblAlias.setName("lblAlias"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -324,7 +272,6 @@ public class PersonalInfo extends JDialog
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
         mainPanel.add(lblAlias, gridBagConstraints);
 
-        tfAlias.setText(resourceMap.getString("tfAlias.text")); // NOI18N
         tfAlias.setMinimumSize(new java.awt.Dimension(60, 21));
         tfAlias.setName("tfAlias"); // NOI18N
         tfAlias.setPreferredSize(new java.awt.Dimension(80, 21));
@@ -336,7 +283,6 @@ public class PersonalInfo extends JDialog
         mainPanel.add(tfAlias, gridBagConstraints);
 
         lblOldPassword.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblOldPassword.setText(resourceMap.getString("lblOldPassword.text")); // NOI18N
         lblOldPassword.setName("lblOldPassword"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -347,7 +293,6 @@ public class PersonalInfo extends JDialog
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
         mainPanel.add(lblOldPassword, gridBagConstraints);
 
-        tfOldPassword.setText(resourceMap.getString("tfOldPassword.text")); // NOI18N
         tfOldPassword.setMinimumSize(new java.awt.Dimension(60, 21));
         tfOldPassword.setName("tfOldPassword"); // NOI18N
         tfOldPassword.setPreferredSize(new java.awt.Dimension(60, 21));
@@ -360,7 +305,6 @@ public class PersonalInfo extends JDialog
         mainPanel.add(tfOldPassword, gridBagConstraints);
 
         lblNewPassword.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblNewPassword.setText(resourceMap.getString("lblNewPassword.text")); // NOI18N
         lblNewPassword.setName("lblNewPassword"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -371,7 +315,6 @@ public class PersonalInfo extends JDialog
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
         mainPanel.add(lblNewPassword, gridBagConstraints);
 
-        tfNewPassword.setText(resourceMap.getString("tfNewPassword.text")); // NOI18N
         tfNewPassword.setMinimumSize(new java.awt.Dimension(60, 21));
         tfNewPassword.setName("tfNewPassword"); // NOI18N
         tfNewPassword.setPreferredSize(new java.awt.Dimension(60, 21));
@@ -384,7 +327,6 @@ public class PersonalInfo extends JDialog
         mainPanel.add(tfNewPassword, gridBagConstraints);
 
         lblConfirmPassword.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblConfirmPassword.setText(resourceMap.getString("lblConfirmPassword.text")); // NOI18N
         lblConfirmPassword.setName("lblConfirmPassword"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -395,7 +337,6 @@ public class PersonalInfo extends JDialog
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
         mainPanel.add(lblConfirmPassword, gridBagConstraints);
 
-        tfConfirmPassword.setText(resourceMap.getString("tfConfirmPassword.text")); // NOI18N
         tfConfirmPassword.setMinimumSize(new java.awt.Dimension(60, 21));
         tfConfirmPassword.setName("tfConfirmPassword"); // NOI18N
         tfConfirmPassword.setPreferredSize(new java.awt.Dimension(60, 21));
@@ -408,8 +349,9 @@ public class PersonalInfo extends JDialog
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         mainPanel.add(tfConfirmPassword, gridBagConstraints);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(PersonalInfo.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(PersonalInfo.class, this);
         btnOk.setAction(actionMap.get("modifyUserInfo")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(PersonalInfo.class);
         btnOk.setText(resourceMap.getString("btnOk.text")); // NOI18N
         btnOk.setName("btnOk"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();

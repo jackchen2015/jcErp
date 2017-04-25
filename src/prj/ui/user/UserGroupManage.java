@@ -8,42 +8,29 @@
  *
  * Created on 2009-8-20, 15:13:20
  */
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
 import com.hongxin.component.ComponentUtil;
 import com.hongxin.component.export.TableModelRecordSet;
 import com.hongxin.component.privilege.PrivilegeController;
-import com.hongxin.omc.operation.Command;
-import com.hongxin.omc.operation.OmcOperationGlue;
-import com.hongxin.omc.operation.OmcProcessor;
-import com.hongxin.omc.operation.UserSession;
-import com.hongxin.speed.core.ProcessData;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
-import com.hongxin.omc.ui.OmcPreferences;
-import com.hongxin.omc.ui.export.DefaultDataExportTask;
-import com.hongxin.omc.ui.user.converter.UserGroupStatusConverter;
-import com.hongxin.omc.ui.user.converter.UserGroupTypeConverter;
-import com.hongxin.omc.user.UserConstants;
-import com.hongxin.omc.user.protocol.CopyUserGroup;
-import com.hongxin.omc.user.protocol.Role;
-import com.hongxin.omc.user.protocol.UserGroup;
 import com.hongxin.saf.AsynBlockTask;
 import com.hongxin.saf.SingleFrameApplication;
-import com.hongxin.speed.core.ProcessCallback;
-import com.hongxin.speed.core.SpeedUtil;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.table.AbstractTableModel;
-import org.apache.commons.lang.StringUtils;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.Task;
+import prj.ui.basic.DefaultDataExportTask;
+import prj.user.po.Role;
+import prj.user.po.UserGroup;
 
 /**
  * 用户组管理,实现新增/修改/删除/锁定/复制用户组等基本操作
@@ -116,24 +103,8 @@ public class UserGroupManage extends javax.swing.JPanel
 		// 获取用户组信息
 		getAllUserGroupMap();
 		// 注册系统信息回调方法
-		OmcProcessor.register(Command.user, Command.userGroupChange,
-				new UserGroupInfoChangeReportHandler());
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="用户组信息改变上报操作的处理器">
-	private class UserGroupInfoChangeReportHandler implements ProcessCallback
-	{
-		@Override
-		public void processCompleted(ProcessData pd)
-		{
-			// 获得用户组、用户信息
-			Task acquireTask =
-					new AcquireUserDataTask(Application.getInstance());
-			Application.getInstance().getContext().getTaskService().
-					execute(acquireTask);
-		}
-	}
-	// </editor-fold>
 
 	/**
 	 * 获得用户组数据
@@ -147,62 +118,66 @@ public class UserGroupManage extends javax.swing.JPanel
 	private void getAllUserGroupMap()
 	{
 		// 获取用户组信息
-		Task acquireTask = new AcquireUserDataTask(Application.getInstance());
-		Application.getInstance().getContext().getTaskService().
-				execute(acquireTask);
+//		Task acquireTask = new AcquireUserDataTask(Application.getInstance());
+//		Application.getInstance().getContext().getTaskService().
+//				execute(acquireTask);
+		List allGrps = new ArrayList();
+		List allRoles = new ArrayList();
+			createUserGroupTable(allGrps,
+					allRoles);		
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="查询用户组操作的处理器">
-	private class AcquireUserDataTask extends AsynBlockTask<Object, Void> 
-	implements ProcessCallback
-	{
-		/**
-		 * 操作粘合对象。
-		 */
-		private OmcOperationGlue glue;
-		
-		AcquireUserDataTask(org.jdesktop.application.Application app)
-		{
-			// Runs on the EDT.  Copy GUI state that
-			// doInBackground() depends on from parameters
-			// to CommitTask fields, here.
-			super(app, OmcPreferences.getInstance().
-					getInteger("sys.asyn.timeout", 60000));
-			// 设置任务标题
-			setTitle(SpeedUtil.
-					getCommandName(Command.user, Command.getAllUserGroups));
-		}
-
-		@Override
-		protected Object doInBackground()
-		{
-			// 异步执行命令
-			glue = new OmcOperationGlue(this);
-			glue.addOperation(Command.user, Command.getAllUserGroups, true, null);
-			glue.addOperation(Command.user, Command.listSysRole, true, null);
-			glue.start();
-			// 阻塞等待
-			waitForReady();
-			return null;
-		}
-
-		@Override
-		public void processCompleted(ProcessData out)
-		{
-			// 任务结束
-			setTaskFinished(true);
-		}
-		
-		@Override
-		protected void succeeded(Object o)
-		{
-			// 显示用户组列表
-			ProcessData result1 = (ProcessData)glue.getResult(Command.user, Command.getAllUserGroups);
-			ProcessData result2 = (ProcessData)glue.getResult(Command.user, Command.listSysRole);
-			createUserGroupTable((List)result1.getData(),
-					(List)result2.getData());
-		}
-	}
+//	private class AcquireUserDataTask extends AsynBlockTask<Object, Void> 
+//	implements ProcessCallback
+//	{
+//		/**
+//		 * 操作粘合对象。
+//		 */
+//		private OmcOperationGlue glue;
+//		
+//		AcquireUserDataTask(org.jdesktop.application.Application app)
+//		{
+//			// Runs on the EDT.  Copy GUI state that
+//			// doInBackground() depends on from parameters
+//			// to CommitTask fields, here.
+//			super(app, OmcPreferences.getInstance().
+//					getInteger("sys.asyn.timeout", 60000));
+//			// 设置任务标题
+//			setTitle(SpeedUtil.
+//					getCommandName(Command.user, Command.getAllUserGroups));
+//		}
+//
+//		@Override
+//		protected Object doInBackground()
+//		{
+//			// 异步执行命令
+//			glue = new OmcOperationGlue(this);
+//			glue.addOperation(Command.user, Command.getAllUserGroups, true, null);
+//			glue.addOperation(Command.user, Command.listSysRole, true, null);
+//			glue.start();
+//			// 阻塞等待
+//			waitForReady();
+//			return null;
+//		}
+//
+//		@Override
+//		public void processCompleted(ProcessData out)
+//		{
+//			// 任务结束
+//			setTaskFinished(true);
+//		}
+//		
+//		@Override
+//		protected void succeeded(Object o)
+//		{
+//			// 显示用户组列表
+//			ProcessData result1 = (ProcessData)glue.getResult(Command.user, Command.getAllUserGroups);
+//			ProcessData result2 = (ProcessData)glue.getResult(Command.user, Command.listSysRole);
+//			createUserGroupTable((List)result1.getData(),
+//					(List)result2.getData());
+//		}
+//	}
 	// </editor-fold>
 
 	// <editor-fold defaultstate="collapsed" desc="用户组表格模型">
@@ -271,16 +246,19 @@ public class UserGroupManage extends javax.swing.JPanel
 				case 2:
 					if(group.getGroupType() > UserGroup.TYPE_SUPER && group.getGroupType() != UserGroup.TYPE_PREP)
 					{
-						return UserGroupTypeConverter.instance.convertForward(UserGroup.TYPE_SUPER);
+//						return UserGroupTypeConverter.instance.convertForward(UserGroup.TYPE_SUPER);
+						return "";
 					}
 					else
 					{
-						return UserGroupTypeConverter.instance.convertForward(group.getGroupType());
+//						return UserGroupTypeConverter.instance.convertForward(group.getGroupType());
+						return "";
 					}
 				case 3:
 					return getRoleText(group);
 				case 4:
-					return UserGroupStatusConverter.instance.convertForward(group.getLockStatus());
+//					return UserGroupStatusConverter.instance.convertForward(group.getLockStatus());
+					return "";
 				case 5:
 					return group.getDescription();
 				default:
@@ -455,7 +433,9 @@ public class UserGroupManage extends javax.swing.JPanel
 	 */
 	private int getCurrentUserTopLevel()
 	{
-		return userGroupModel.getTopGroupLevel(UserSession.getInstance().getUserInfo().getListGroupId());
+		List<Integer> allGids = new ArrayList<Integer>();
+		//List<Integer> allGids = UserSession.getInstance().getUserInfo().getListGroupId()
+		return userGroupModel.getTopGroupLevel(allGids);
 	}
 
 	/**
@@ -465,7 +445,8 @@ public class UserGroupManage extends javax.swing.JPanel
 	 */
 	private int getCurrentUserTopType()
 	{
-		return UserSession.getInstance().getUserInfo().getTopGroupType();
+//		return UserSession.getInstance().getUserInfo().getTopGroupType();
+		return 1;
 	}
 
 	/**
@@ -483,11 +464,8 @@ public class UserGroupManage extends javax.swing.JPanel
         toolBar = new javax.swing.JToolBar();
         btnAdd = ComponentUtil.createToolBarButton();
         btnEdit = ComponentUtil.createToolBarButton();
-        btnSwitch = ComponentUtil.createToolBarButton();
         btnDelete = ComponentUtil.createToolBarButton();
         separator1 = new javax.swing.JToolBar.Separator();
-        btnCopy = ComponentUtil.createToolBarButton();
-        btnLock = ComponentUtil.createToolBarButton();
         separator2 = new javax.swing.JToolBar.Separator();
         btnExport = ComponentUtil.createToolBarButton();
         btnQuit = new javax.swing.JButton();
@@ -507,7 +485,7 @@ public class UserGroupManage extends javax.swing.JPanel
         toolBar.setRollover(true);
         toolBar.setName("toolBar"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(UserGroupManage.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(UserGroupManage.class, this);
         btnAdd.setAction(actionMap.get("addUserGroup")); // NOI18N
         btnAdd.setFocusable(false);
         btnAdd.setName("btnAdd"); // NOI18N
@@ -518,13 +496,6 @@ public class UserGroupManage extends javax.swing.JPanel
         btnEdit.setName("btnEdit"); // NOI18N
         toolBar.add(btnEdit);
 
-        btnSwitch.setAction(actionMap.get("switchUserGroup")); // NOI18N
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(UserGroupManage.class);
-        btnSwitch.setText(resourceMap.getString("btnSwitch.text")); // NOI18N
-        btnSwitch.setFocusable(false);
-        btnSwitch.setName("btnSwitch"); // NOI18N
-        toolBar.add(btnSwitch);
-
         btnDelete.setAction(actionMap.get("delUserGroup")); // NOI18N
         btnDelete.setFocusable(false);
         btnDelete.setName("btnDelete"); // NOI18N
@@ -532,16 +503,6 @@ public class UserGroupManage extends javax.swing.JPanel
 
         separator1.setName("separator1"); // NOI18N
         toolBar.add(separator1);
-
-        btnCopy.setAction(actionMap.get("copyUserGroup")); // NOI18N
-        btnCopy.setFocusable(false);
-        btnCopy.setName("btnCopy"); // NOI18N
-        toolBar.add(btnCopy);
-
-        btnLock.setAction(actionMap.get("lockUserGroup")); // NOI18N
-        btnLock.setFocusable(false);
-        btnLock.setName("btnLock"); // NOI18N
-        toolBar.add(btnLock);
 
         separator2.setName("separator2"); // NOI18N
         toolBar.add(separator2);
@@ -611,91 +572,8 @@ public class UserGroupManage extends javax.swing.JPanel
 		{
 			dialog.dispose();
 		}
-		OmcProcessor.unregister(Command.user, Command.userGroupChange);
+//		OmcProcessor.unregister(Command.user, Command.userGroupChange);
 		userGroupModel.clear();
-	}
-
-	/**
-	 * 锁定用户组
-	 */
-	@Action
-	public void lockUserGroup()
-	{
-		//获取选择的用户组对象
-		UserGroup userGroup = getSelectedUserGroup();
-		if(userGroup == null)
-		{
-			return;
-		}
-		
-			// 确认操作
-		int type = JOptionPane.showConfirmDialog(null, 
-				rm.getString("msg.lock.unlock.confirm"), 
-				rm.getString("msg.confirm"), 
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE);
-		if(type != JOptionPane.YES_OPTION)
-		{
-			return;
-		}
-		
-		int oldstate = userGroup.getLockStatus();
-		//判断是否默认用户组
-		if(userGroup.getId() == 0)
-		{
-			JOptionPane.showMessageDialog(this,
-					rm.getString("mb.lockusergroup.no"),
-					rm.getString("mb.tip"),
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		//进行解锁/锁定操作
-		ProcessData pd =
-				OmcProcessor.
-				process(Command.user, Command.lockUserGroup, userGroup);
-		int lockState = (Integer)pd.getData();
-		//获得用户组表模型
-		int index = userGroupTable.getSelectedRow();
-		int modelIndex = userGroupTable.convertRowIndexToModel(index);
-		//更改用户组显示状态
-		switch(lockState)
-		{
-			//成功
-			case 1:
-				//旧的状态是锁定
-				if(oldstate == 1)
-				{
-					userGroupModel.
-							setValueAt(rm.getString("userGroup.unlock"), modelIndex, 2);
-//					JOptionPane.showMessageDialog(this,
-//							rm.getString("mb.userGroup.unlock"),
-//							rm.getString("mb.tip"),
-//							JOptionPane.INFORMATION_MESSAGE);
-					userGroup.setLockStatus(0);
-				}
-				else
-				{
-					//旧的状态是解锁
-					userGroupModel.
-							setValueAt(rm.getString("userGroup.lock"), modelIndex, 2);
-//					JOptionPane.showMessageDialog(this,
-//							rm.getString("mb.userGroup.lock"),
-//							rm.getString("mb.tip"),
-//							JOptionPane.INFORMATION_MESSAGE);
-					userGroup.setLockStatus(1);
-				}
-				break;
-			//失败
-			case 0:
-				break;
-			case 6:
-				// 存在在线用户，无法执行锁定操作
-				JOptionPane.showMessageDialog(this,
-						rm.getString("msg.lock.error.online"),
-						rm.getString("msg.error"),
-						JOptionPane.ERROR_MESSAGE);
-				break;
-		}
 	}
 
 	/**
@@ -747,32 +625,6 @@ public class UserGroupManage extends javax.swing.JPanel
 	}
 	
 	/**
-	 * 切换用户组
-	 */
-	@Action
-	public void switchUserGroup()
-	{
-		//获取选择的用户组对象
-		UserGroup userGroup = getSelectedUserGroup();
-		//用户组为Null退出
-		if(userGroup == null)
-		{
-			return;
-		}
-		UserGroup userGroupNew = userGroup.clone();
-		//打开编辑界面
-		UserGroupSwitch window = new UserGroupSwitch(SingleFrameApplication.
-				getInstance().getMainFrame(), true, userGroupNew);
-		SingleFrameApplication.getInstance().show(window);
-		//判断是否处理成功
-		if(window.isok)
-		{
-			// 更新用户组
-			userGroupModel.updateUserGroup(userGroupNew);
-		}
-	}
-
-	/**
 	 * 删除用户组
 	 */
 	@Action
@@ -821,117 +673,46 @@ public class UserGroupManage extends javax.swing.JPanel
 		if(type == 0)
 		{
 			// 执行删除操作
-			ProcessData out = OmcProcessor.process(Command.user,
-					Command.deleteUserGroup, userGroup);
-			// 0 失败
-			// 1 成功
-			switch(out.getState())
-			{
-				case 0:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.delusergourp.fail"),
-							rm.getString("msg.error"),
-							JOptionPane.ERROR_MESSAGE);
-					break;
-				case 1:
-					// 删除用户组
-					userGroupModel.removeUserGroup(userGroup);
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.delusergourp.success"),
-							rm.getString("mb.tip"),
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 2:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.delusergourp.fail2"),
-							rm.getString("msg.error"),
-							JOptionPane.ERROR_MESSAGE);
-					break;
-				case UserConstants.remove_usergroup_moveuser:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("msg.remove.usergroup.moveuser", 
-							StringUtils.join((List)out.getData(), ",")),
-							rm.getString("msg.error"),
-							JOptionPane.ERROR_MESSAGE);
-					break;
-				case UserConstants.remove_user_group_forbidden:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("msg.del.super.forbid", userGroupName),
-							rm.getString("msg.error"),
-							JOptionPane.ERROR_MESSAGE);
-					break;
-			}
-		}
-	}
-
-	/**
-	 * 拷贝用户组
-	 */
-	@Action
-	public void copyUserGroup()
-	{
-		//获得选中的用户节点对象
-		UserGroup userGroup = getSelectedUserGroup();
-		if(userGroup == null)
-		{
-			return;
-		}
-		//创建新的用户组
-		CopyUserGroup copyUserGroup = new CopyUserGroup();
-		//赋值 用户名
-		copyUserGroup.setBeCopyUserGroup(userGroup.getName());
-		//用户组Id
-		copyUserGroup.setUserGroup(userGroup.getId());
-		CopyUserGroupDialog window =
-				new CopyUserGroupDialog(SingleFrameApplication.getInstance().
-				getMainFrame(), true, copyUserGroup);
-		SingleFrameApplication.getInstance().show(window);
-		//判断是否处理成功
-		if(window.isok)
-		{
-			//F复制用户操作
-			ProcessData out = OmcProcessor.process(Command.user,
-					Command.copyUserGroup, copyUserGroup);
-			switch(out.getState())
-			{
-				//失败
-				case 0:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.copyusergroup.fail"),
-							rm.getString("mb.tip"),
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				//成功
-				case 1:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.copyusergroup.success"),
-							rm.getString("mb.tip"),
-							JOptionPane.INFORMATION_MESSAGE);
-					// 刷新用户组列表
-					UserGroup newUserGroup = userGroup.clone();
-					// 新的用户组
-					newUserGroup.setId((Integer)out.getData());
-					// 新的用户组名
-					newUserGroup.setName(copyUserGroup.getName());
-					// 用户组描述
-					newUserGroup.setDescription(copyUserGroup.getDesc());
-					// 添加用户组
-					userGroupModel.addUserGroup(newUserGroup);
-					break;
-				case 2:
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.usergroupname.repeat"),
-							rm.getString("mb.tip"),
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-				case 7:
-					//未找到被拷贝用户
-					JOptionPane.showMessageDialog(this,
-							rm.getString("mb.usergroupNotExist"),
-							rm.getString("mb.tip"),
-							JOptionPane.INFORMATION_MESSAGE);
-					break;
-			}
+//			ProcessData out = OmcProcessor.process(Command.user,
+//					Command.deleteUserGroup, userGroup);
+//			// 0 失败
+//			// 1 成功
+//			switch(out.getState())
+//			{
+//				case 0:
+//					JOptionPane.showMessageDialog(this,
+//							rm.getString("mb.delusergourp.fail"),
+//							rm.getString("msg.error"),
+//							JOptionPane.ERROR_MESSAGE);
+//					break;
+//				case 1:
+//					// 删除用户组
+//					userGroupModel.removeUserGroup(userGroup);
+//					JOptionPane.showMessageDialog(this,
+//							rm.getString("mb.delusergourp.success"),
+//							rm.getString("mb.tip"),
+//							JOptionPane.INFORMATION_MESSAGE);
+//					break;
+//				case 2:
+//					JOptionPane.showMessageDialog(this,
+//							rm.getString("mb.delusergourp.fail2"),
+//							rm.getString("msg.error"),
+//							JOptionPane.ERROR_MESSAGE);
+//					break;
+//				case UserConstants.remove_usergroup_moveuser:
+//					JOptionPane.showMessageDialog(this,
+//							rm.getString("msg.remove.usergroup.moveuser", 
+//							StringUtils.join((List)out.getData(), ",")),
+//							rm.getString("msg.error"),
+//							JOptionPane.ERROR_MESSAGE);
+//					break;
+//				case UserConstants.remove_user_group_forbidden:
+//					JOptionPane.showMessageDialog(this,
+//							rm.getString("msg.del.super.forbid", userGroupName),
+//							rm.getString("msg.error"),
+//							JOptionPane.ERROR_MESSAGE);
+//					break;
+//			}
 		}
 	}
 
@@ -956,16 +737,14 @@ public class UserGroupManage extends javax.swing.JPanel
 		TableModelRecordSet recordSet = new TableModelRecordSet(userGroupTable.getModel());
 		return new DefaultDataExportTask(listColumn, recordSet, null);
 	}
-	
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnExport;
-    private javax.swing.JButton btnLock;
     private javax.swing.JButton btnQuit;
-    private javax.swing.JButton btnSwitch;
     private javax.swing.JToolBar.Separator separator1;
     private javax.swing.JToolBar.Separator separator2;
     private javax.swing.JScrollPane tableScrollPane;

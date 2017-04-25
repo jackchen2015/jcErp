@@ -9,17 +9,11 @@
  * Created on 2015-2-11, 8:29:11
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
 import com.hongxin.component.export.AbstractRecordSet;
-import com.hongxin.omc.operation.Command;
-import com.hongxin.omc.operation.OmcProcessor;
-import com.hongxin.omc.ui.export.DefaultDataExportTask;
-import com.hongxin.omc.ui.validator.ElementNameValidator;
-import com.hongxin.omc.user.protocol.Role;
-import com.hongxin.omc.util.OmcDictionary;
+
 import com.hongxin.saf.SingleFrameApplication;
-import com.hongxin.speed.core.ProcessData;
 import com.hongxin.util.GUIUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +25,8 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
-import org.jdesktop.beansbinding.Validator;
+import prj.ui.basic.DefaultDataExportTask;
+import prj.user.po.Role;
 
 /**
  * 角色编辑界面。
@@ -78,13 +73,13 @@ public class SysRoleEditor extends javax.swing.JPanel
 			tfName.setText(role.getName());
 			tfDesc.setText(role.getDescription());
 			// 加载角色权限
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.getSysRole, role.getId());
-			if(out.getData() != null)
-			{
-				role.setListFunction((List)out.getData());
-				sysRoleFuncTree.setSelectedFunction((List)out.getData());
-			}
+//			ProcessData out = OmcProcessor.process(Command.user, 
+//					Command.getSysRole, role.getId());
+//			if(out.getData() != null)
+//			{
+//				role.setListFunction((List)out.getData());
+//				sysRoleFuncTree.setSelectedFunction((List)out.getData());
+//			}
 		}
 	}
 	
@@ -191,9 +186,8 @@ public class SysRoleEditor extends javax.swing.JPanel
 			{
 				// 权限列表
 				int func = source.getListFunction().get(indicator - 2);
-				String funcName = String.format("%s/%s", 
-						OmcDictionary.getInstance().sys_getItemAlias(func),
-						OmcDictionary.getInstance().sys_getNameById(func));
+//				String funcName = String.format("%s/%s", OmcDictionary.getInstance().sys_getItemAlias(func),OmcDictionary.getInstance().sys_getNameById(func));
+				String funcName = "a";
 				return new String[] { rm.getString("msg.role.func"), funcName };
 			}
 		}
@@ -220,16 +214,16 @@ public class SysRoleEditor extends javax.swing.JPanel
         tfName = new javax.swing.JTextField();
         lblDesc = new javax.swing.JLabel();
         tfDesc = new javax.swing.JTextField();
-        treeScrollPane = new javax.swing.JScrollPane();
-        sysRoleFuncTree = new com.hongxin.omc.ui.user.SysRoleFuncTree();
         cbCheckAll = new javax.swing.JCheckBox();
         btnCancel = new javax.swing.JButton();
         btnCommit = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sysRoleFuncTree = new prj.ui.user.SysRoleFuncTree();
 
         setName("Form_SysRoleEditor"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance().getContext().getResourceMap(SysRoleEditor.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getResourceMap(SysRoleEditor.class);
         lblName.setText(resourceMap.getString("lblName.text")); // NOI18N
         lblName.setName("lblName"); // NOI18N
 
@@ -239,12 +233,6 @@ public class SysRoleEditor extends javax.swing.JPanel
         lblDesc.setName("lblDesc"); // NOI18N
 
         tfDesc.setName("tfDesc"); // NOI18N
-
-        treeScrollPane.setName("treeScrollPane"); // NOI18N
-
-        sysRoleFuncTree.setName("sysRoleFuncTree"); // NOI18N
-        sysRoleFuncTree.setRootVisible(false);
-        treeScrollPane.setViewportView(sysRoleFuncTree);
 
         cbCheckAll.setText(resourceMap.getString("cbCheckAll.text")); // NOI18N
         cbCheckAll.setName("cbCheckAll"); // NOI18N
@@ -256,7 +244,7 @@ public class SysRoleEditor extends javax.swing.JPanel
             }
         });
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(SysRoleEditor.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(SysRoleEditor.class, this);
         btnCancel.setAction(actionMap.get("cancel")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
 
@@ -265,6 +253,13 @@ public class SysRoleEditor extends javax.swing.JPanel
 
         btnExport.setAction(actionMap.get("export")); // NOI18N
         btnExport.setName("btnExport"); // NOI18N
+
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        sysRoleFuncTree.setCheckBoxEnabled(false);
+        sysRoleFuncTree.setName("sysRoleFuncTree"); // NOI18N
+        sysRoleFuncTree.setRootVisible(false);
+        jScrollPane1.setViewportView(sysRoleFuncTree);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -281,7 +276,6 @@ public class SysRoleEditor extends javax.swing.JPanel
                         .addComponent(btnCommit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancel))
-                    .addComponent(treeScrollPane)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -289,8 +283,13 @@ public class SysRoleEditor extends javax.swing.JPanel
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblDesc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)))
+                        .addComponent(tfDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -301,15 +300,18 @@ public class SysRoleEditor extends javax.swing.JPanel
                     .addComponent(tfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDesc)
                     .addComponent(tfDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(treeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 389, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbCheckAll)
                     .addComponent(btnCancel)
                     .addComponent(btnCommit)
                     .addComponent(btnExport))
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(32, 32, 32)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                    .addGap(33, 33, 33)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -322,16 +324,16 @@ public class SysRoleEditor extends javax.swing.JPanel
 	public void commit()
 	{
 		// 名称检查
-		ElementNameValidator validator = new ElementNameValidator(false);
-		Validator.Result result = validator.validate(tfName.getText().trim());
-		if(result != null)
-		{
-			JOptionPane.showMessageDialog(null, 
-					rm.getString("msg.name.invalid", result.getDescription()), 
-					rm.getString("msg.error"), 
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+//		ElementNameValidator validator = new ElementNameValidator(false);
+//		Validator.Result result = validator.validate(tfName.getText().trim());
+//		if(result != null)
+//		{
+//			JOptionPane.showMessageDialog(null, 
+//					rm.getString("msg.name.invalid", result.getDescription()), 
+//					rm.getString("msg.error"), 
+//					JOptionPane.ERROR_MESSAGE);
+//			return;
+//		}
 		cancelClicked = false;
 		if(dialog != null)
 		{
@@ -374,12 +376,14 @@ public class SysRoleEditor extends javax.swing.JPanel
 			@Override
 			public int compare(Object o1, Object o2)
 			{
-				String func1 = String.format("%s/%s", 
-						OmcDictionary.getInstance().sys_getItemAlias((Integer)o1),
-						OmcDictionary.getInstance().sys_getNameById((Integer)o1));
-				String func2 = String.format("%s/%s", 
-						OmcDictionary.getInstance().sys_getItemAlias((Integer)o2),
-						OmcDictionary.getInstance().sys_getNameById((Integer)o2));
+//				String func1 = String.format("%s/%s", 
+//						OmcDictionary.getInstance().sys_getItemAlias((Integer)o1),
+//						OmcDictionary.getInstance().sys_getNameById((Integer)o1));
+//				String func2 = String.format("%s/%s", 
+//						OmcDictionary.getInstance().sys_getItemAlias((Integer)o2),
+//						OmcDictionary.getInstance().sys_getNameById((Integer)o2));
+				String func1 = "a";
+				String func2 = "b";
 				return func1.compareTo(func2);
 			}
 		});
@@ -392,16 +396,38 @@ public class SysRoleEditor extends javax.swing.JPanel
 		return new DefaultDataExportTask(listField, recordSet, null, null, null);
 	}
 
+    private class ExportTask extends org.jdesktop.application.Task<Object, Void> {
+        ExportTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to ExportTask fields, here.
+            super(app);
+        }
+        @Override protected Object doInBackground() {
+            // Your Task's code here.  This method runs
+            // on a background thread, so don't reference
+            // the Swing GUI from here.
+            return null;  // return your result
+        }
+        @Override protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnCommit;
     private javax.swing.JButton btnExport;
     private javax.swing.JCheckBox cbCheckAll;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDesc;
     private javax.swing.JLabel lblName;
+    /*
     private com.hongxin.omc.ui.user.SysRoleFuncTree sysRoleFuncTree;
+    */
+    private prj.ui.user.SysRoleFuncTree sysRoleFuncTree;
     private javax.swing.JTextField tfDesc;
     private javax.swing.JTextField tfName;
-    private javax.swing.JScrollPane treeScrollPane;
     // End of variables declaration//GEN-END:variables
 }

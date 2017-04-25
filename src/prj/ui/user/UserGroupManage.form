@@ -96,7 +96,7 @@
         <Component class="javax.swing.JButton" name="btnAdd">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="addUserGroup" methodName="addUserGroup"/>
+              <action class="prj.ui.user.UserGroupManage" id="addUserGroup" methodName="addUserGroup"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnAdd" noResource="true"/>
@@ -108,7 +108,7 @@
         <Component class="javax.swing.JButton" name="btnEdit">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="editUserGroup" methodName="editUserGroup"/>
+              <action class="prj.ui.user.UserGroupManage" id="editUserGroup" methodName="editUserGroup"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
@@ -117,23 +117,10 @@
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createToolBarButton()"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JButton" name="btnSwitch">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="switchUserGroup" methodName="switchUserGroup"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="btnSwitch.text"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="btnSwitch" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createToolBarButton()"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JButton" name="btnDelete">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="delUserGroup" methodName="delUserGroup"/>
+              <action class="prj.ui.user.UserGroupManage" id="delUserGroup" methodName="delUserGroup"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnDelete" noResource="true"/>
@@ -147,30 +134,6 @@
             <Property name="name" type="java.lang.String" value="separator1" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnCopy">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="copyUserGroup" methodName="copyUserGroup"/>
-            </Property>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="btnCopy" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createToolBarButton()"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnLock">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="lockUserGroup" methodName="lockUserGroup"/>
-            </Property>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="btnLock" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createToolBarButton()"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JToolBar$Separator" name="separator2">
           <Properties>
             <Property name="name" type="java.lang.String" value="separator2" noResource="true"/>
@@ -179,7 +142,7 @@
         <Component class="javax.swing.JButton" name="btnExport">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.UserGroupManage" id="export" methodName="export"/>
+              <action class="prj.ui.user.UserGroupManage" id="export" methodName="export"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnExport" noResource="true"/>
@@ -193,7 +156,7 @@
     <Component class="javax.swing.JButton" name="btnQuit">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="com.hongxin.omc.ui.user.UserGroupManage" id="exit" methodName="exit"/>
+          <action class="prj.ui.user.UserGroupManage" id="exit" methodName="exit"/>
         </Property>
         <Property name="name" type="java.lang.String" value="btnQuit" noResource="true"/>
       </Properties>

@@ -92,7 +92,7 @@
         <Component class="javax.swing.JButton" name="btnAdd">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="addRole" methodName="addRole"/>
+              <action class="prj.ui.user.SysRoleMgmt" id="addRole" methodName="addRole"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnAdd" noResource="true"/>
@@ -104,7 +104,7 @@
         <Component class="javax.swing.JButton" name="btnEdit">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="modifyRole" methodName="modifyRole"/>
+              <action class="prj.ui.user.SysRoleMgmt" id="modifyRole" methodName="modifyRole"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
@@ -113,22 +113,10 @@
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createToolBarButton()"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JButton" name="btnCopy">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="copyRole" methodName="copyRole"/>
-            </Property>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="btnCopy" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="ComponentUtil.createToolBarButton()"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JButton" name="btnDelete">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="removeRole" methodName="removeRole"/>
+              <action class="prj.ui.user.SysRoleMgmt" id="removeRole" methodName="removeRole"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnDelete" noResource="true"/>
@@ -145,7 +133,7 @@
         <Component class="javax.swing.JButton" name="btnExport">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="export" methodName="export"/>
+              <action class="prj.ui.user.SysRoleMgmt" id="export" methodName="export"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnExport" noResource="true"/>
@@ -159,7 +147,7 @@
     <Component class="javax.swing.JButton" name="btnExit">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="exit" methodName="exit"/>
+          <action class="prj.ui.user.SysRoleMgmt" id="exit" methodName="exit"/>
         </Property>
         <Property name="name" type="java.lang.String" value="btnExit" noResource="true"/>
       </Properties>
@@ -167,7 +155,7 @@
     <Component class="javax.swing.JButton" name="btnSelect">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-          <action class="com.hongxin.omc.ui.user.SysRoleMgmt" id="select" methodName="select"/>
+          <action class="prj.ui.user.SysRoleMgmt" id="select" methodName="select"/>
         </Property>
         <Property name="name" type="java.lang.String" value="btnSelect" noResource="true"/>
       </Properties>

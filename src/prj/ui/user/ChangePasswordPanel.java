@@ -24,10 +24,6 @@ import org.jdesktop.application.ResourceMap;
  */
 public class ChangePasswordPanel extends org.jdesktop.swingx.JXPanel
 {
-	/**
-	 * 密码策略。
-	 */
-	private CryptoGramPolicyInfo policy;
 	
 	/** Creates new form ChangePasswordPanel */
 	public ChangePasswordPanel()
@@ -53,15 +49,6 @@ public class ChangePasswordPanel extends org.jdesktop.swingx.JXPanel
 	}
 	
 	/**
-	 * 密码策略。
-	 * @param policy the policy to set
-	 */
-	public void setPolicy(CryptoGramPolicyInfo policy)
-	{
-		this.policy = policy;
-	}
-
-	/**
 	 * 提交修改的密码
 	 */
 	@Action
@@ -71,66 +58,46 @@ public class ChangePasswordPanel extends org.jdesktop.swingx.JXPanel
 		String newPassword = new String(newPasswordChars);
 		String confirmPassword = new String(tfConfirmPass.getPassword());
 		String oldPassword = new String(tfOldPass.getPassword());
-		boolean modifyPassword;
-		if(null == policy || policy.isEmpty())
-		{
-			policy = new CryptoGramPolicyInfo();
-		}
+//		boolean modifyPassword;
+
 		ResourceMap rm = Application.getInstance().getContext().getResourceMap(ChangePasswordPanel.class);
-		//效验密码策略
-		int checkResult = policy.modifyPasswordPolicy(oldPassword, newPassword, 
-				confirmPassword, tfUser.getText());
-		if(checkResult == CryptoGramPolicyInfo.normalPolicy)
-		{
-			modifyPassword = true;
-		}
-		else
-		{
-			// 使用安全策略类中的密码校验方法
-			UserPasswordPolicyConverter uppc =
-					new UserPasswordPolicyConverter(policy.getMinLength(), policy.getMaxLength());
-			JOptionPane.showMessageDialog(this,
-					uppc.convertForward(checkResult),
-					rm.getString("msg.inputerror"),
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		if(!modifyPassword)
-		{
-			return;
-		}
+
+//		if(!modifyPassword)
+//		{
+//			return;
+//		}
 		// 发送修改用户密码命令帧
 		String[] passwords =
 		{
 			oldPassword, newPassword
 		};
-		ProcessData out = OmcProcessor.process(Command.user, 
-				Command.modifyPassword, passwords);
-		if(out.getState() == UserConstants.pass_repeat_too_much)
-		{
-			JOptionPane.showMessageDialog(null,
-					rm.getString("msg.repeat.too.much"),
-					rm.getString("this.title"),
-					JOptionPane.ERROR_MESSAGE);
-		}
-		else if(out.getState() == OmcConstants.coes_failure)
-		{
-			JOptionPane.showMessageDialog(null,
-					rm.getString("msg.orgPassError"),
-					rm.getString("this.title"),
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-		else if(out.getState() == OmcConstants.coes_success)
-		{
-			JOptionPane.showMessageDialog(null,
-					rm.getString("msg.succeeded"),
-					rm.getString("this.title"),
-					JOptionPane.INFORMATION_MESSAGE);
-			// 通知密码修改
-			LoginService service =
-					(LoginService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_LOGIN);
-			service.firePasswordChanged(newPasswordChars);
-		}
+//		ProcessData out = OmcProcessor.process(Command.user, 
+//				Command.modifyPassword, passwords);
+//		if(out.getState() == UserConstants.pass_repeat_too_much)
+//		{
+//			JOptionPane.showMessageDialog(null,
+//					rm.getString("msg.repeat.too.much"),
+//					rm.getString("this.title"),
+//					JOptionPane.ERROR_MESSAGE);
+//		}
+//		else if(out.getState() == OmcConstants.coes_failure)
+//		{
+//			JOptionPane.showMessageDialog(null,
+//					rm.getString("msg.orgPassError"),
+//					rm.getString("this.title"),
+//					JOptionPane.INFORMATION_MESSAGE);
+//		}
+//		else if(out.getState() == OmcConstants.coes_success)
+//		{
+//			JOptionPane.showMessageDialog(null,
+//					rm.getString("msg.succeeded"),
+//					rm.getString("this.title"),
+//					JOptionPane.INFORMATION_MESSAGE);
+//			// 通知密码修改
+//			LoginService service =
+//					(LoginService)ServiceUtils.getInstance().getService(ServiceConstants.SVC_LOGIN);
+//			service.firePasswordChanged(newPasswordChars);
+//		}
 	}
 
 	/** This method is called from within the constructor to

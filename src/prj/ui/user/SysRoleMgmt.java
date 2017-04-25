@@ -9,22 +9,11 @@
  * Created on 2015-2-11, 8:27:43
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
 import com.hongxin.component.ComponentUtil;
 import com.hongxin.component.export.TableModelRecordSet;
-import com.hongxin.omc.operation.Command;
-import com.hongxin.omc.operation.OmcProcessor;
-import com.hongxin.omc.ui.export.DefaultDataExportTask;
-import com.hongxin.omc.user.UserConstants;
-import com.hongxin.omc.user.protocol.Role;
-import com.hongxin.omc.util.OmcConstants;
 import com.hongxin.saf.SingleFrameApplication;
-import com.hongxin.speed.core.InterceptEvent;
-import com.hongxin.speed.core.InterceptException;
-import com.hongxin.speed.core.InterceptorAdapter;
-import com.hongxin.speed.core.ProcessCallback;
-import com.hongxin.speed.core.ProcessData;
 import com.hongxin.util.GUIUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +24,8 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
+import prj.ui.basic.DefaultDataExportTask;
+import prj.user.po.Role;
 
 /**
  * 角色管理界面。
@@ -46,10 +37,7 @@ public class SysRoleMgmt extends javax.swing.JPanel
 	 * 界面操作状态。
 	 */
 	private boolean cancelClicked = true;
-	/**
-	 * 角色变更事件处理。
-	 */
-	private SysRoleChangeHandler handler;
+
 	private ResourceMap rm;
 	private JDialog dialog;
 	
@@ -66,9 +54,6 @@ public class SysRoleMgmt extends javax.swing.JPanel
 	 */
 	private void initialize()
 	{
-		handler = new SysRoleChangeHandler();
-		OmcProcessor.getInstance().registerSingleInterceptor(handler, 
-				Command.user, Command.sysRoleChanged);
 		// 加载角色列表
 		initSysRole();
 	}
@@ -78,40 +63,28 @@ public class SysRoleMgmt extends javax.swing.JPanel
 	 */
 	private void initSysRole()
 	{
-		OmcProcessor.process(Command.user, Command.listSysRole, 
-		null, new ProcessCallback()
-		{
-			@Override
-			public void processCompleted(final ProcessData out)
-			{
-				if(out.getData() != null)
-				{
-					javax.swing.SwingUtilities.invokeLater(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							((SysRoleTableModel)sysRoleTable.getModel()).initModel((List)out.getData());
-						}
-					});
-				}
-			}	
-		});
+//		OmcProcessor.process(Command.user, Command.listSysRole, 
+//		null, new ProcessCallback()
+//		{
+//			@Override
+//			public void processCompleted(final ProcessData out)
+//			{
+//				if(out.getData() != null)
+//				{
+//					javax.swing.SwingUtilities.invokeLater(new Runnable()
+//					{
+//						@Override
+//						public void run()
+//						{
+//							((SysRoleTableModel)sysRoleTable.getModel()).initModel((List)out.getData());
+//						}
+//					});
+//				}
+//			}	
+//		});
+		((SysRoleTableModel)sysRoleTable.getModel()).initModel(new ArrayList());
 	}
 	
-	/**
-	 * 角色变更事件处理。
-	 */
-	private class SysRoleChangeHandler extends InterceptorAdapter
-	{
-		@Override
-		public void afterParsing(InterceptEvent e) throws InterceptException
-		{
-			// 重新加载角色列表
-			initSysRole();
-		}
-	}
-
 	/**
 	 * 角色表格模型。
 	 */
@@ -303,7 +276,6 @@ public class SysRoleMgmt extends javax.swing.JPanel
         toolBar = new javax.swing.JToolBar();
         btnAdd = ComponentUtil.createToolBarButton();
         btnEdit = ComponentUtil.createToolBarButton();
-        btnCopy = ComponentUtil.createToolBarButton();
         btnDelete = ComponentUtil.createToolBarButton();
         separator1 = new javax.swing.JToolBar.Separator();
         btnExport = ComponentUtil.createToolBarButton();
@@ -323,7 +295,7 @@ public class SysRoleMgmt extends javax.swing.JPanel
         toolBar.setRollover(true);
         toolBar.setName("toolBar"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance().getContext().getActionMap(SysRoleMgmt.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(prj.PrjApp.class).getContext().getActionMap(SysRoleMgmt.class, this);
         btnAdd.setAction(actionMap.get("addRole")); // NOI18N
         btnAdd.setFocusable(false);
         btnAdd.setName("btnAdd"); // NOI18N
@@ -333,11 +305,6 @@ public class SysRoleMgmt extends javax.swing.JPanel
         btnEdit.setFocusable(false);
         btnEdit.setName("btnEdit"); // NOI18N
         toolBar.add(btnEdit);
-
-        btnCopy.setAction(actionMap.get("copyRole")); // NOI18N
-        btnCopy.setFocusable(false);
-        btnCopy.setName("btnCopy"); // NOI18N
-        toolBar.add(btnCopy);
 
         btnDelete.setAction(actionMap.get("removeRole")); // NOI18N
         btnDelete.setFocusable(false);
@@ -399,11 +366,6 @@ public class SysRoleMgmt extends javax.swing.JPanel
 			dialog.dispose();
 			dialog = null;
 		}
-		if(handler != null)
-		{
-			OmcProcessor.getInstance().unregisterInterceptor(handler);
-			handler = null;
-		}
 	}
 	
 	/**
@@ -416,10 +378,10 @@ public class SysRoleMgmt extends javax.swing.JPanel
 		String msg = null;
 		switch(state)
 		{
-			case UserConstants.name_repeat:
+			case 1:
 				msg = rm.getString("msg.name.repeat", role.getName());
 				break;
-			case UserConstants.obj_in_use:
+			case 2:
 				msg = rm.getString("msg.obj.inuse", role.getName());
 				break;
 		}
@@ -447,33 +409,34 @@ public class SysRoleMgmt extends javax.swing.JPanel
 		{
 			Role newRole = editor.getRole();
 			// 添加角色
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.addSysRole, newRole);
-			if(out.getState() == OmcConstants.coes_success)
-			{
-				// 添加成功
-				newRole.setId((Integer)out.getData());
-				((SysRoleTableModel)sysRoleTable.getModel()).addRole(newRole);
-				JOptionPane.showMessageDialog(null, 
-						rm.getString("msg.role.new.success"), 
-						rm.getString("msg.prompt"), 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else
-			{
-				// 添加失败
-				if(out.getState() != OmcConstants.coes_failure)
-				{
-					showErrorMessage(newRole, out.getState());
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, 
-							rm.getString("msg.role.new.error"), 
-							rm.getString("msg.error"), 
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
+			
+//			ProcessData out = OmcProcessor.process(Command.user, 
+//					Command.addSysRole, newRole);
+//			if(out.getState() == OmcConstants.coes_success)
+//			{
+//				// 添加成功
+//				newRole.setId((Integer)out.getData());
+//				((SysRoleTableModel)sysRoleTable.getModel()).addRole(newRole);
+//				JOptionPane.showMessageDialog(null, 
+//						rm.getString("msg.role.new.success"), 
+//						rm.getString("msg.prompt"), 
+//						JOptionPane.INFORMATION_MESSAGE);
+//			}
+//			else
+//			{
+//				// 添加失败
+//				if(out.getState() != OmcConstants.coes_failure)
+//				{
+//					showErrorMessage(newRole, out.getState());
+//				}
+//				else
+//				{
+//					JOptionPane.showMessageDialog(null, 
+//							rm.getString("msg.role.new.error"), 
+//							rm.getString("msg.error"), 
+//							JOptionPane.ERROR_MESSAGE);
+//				}
+//			}
 		}
 	}
 
@@ -491,76 +454,32 @@ public class SysRoleMgmt extends javax.swing.JPanel
 		{
 			Role newRole = editor.getRole();
 			// 修改角色
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.modifySysRole, newRole);
-			if(out.getState() == OmcConstants.coes_success)
-			{
-				// 修改成功
-				((SysRoleTableModel)sysRoleTable.getModel()).updateRole(newRole);
-				JOptionPane.showMessageDialog(null, 
-						rm.getString("msg.role.modify.success"), 
-						rm.getString("msg.prompt"), 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else
-			{
-				// 修改失败
-				if(out.getState() != OmcConstants.coes_failure)
-				{
-					showErrorMessage(newRole, out.getState());
-				}
-				else
-				{				
-					JOptionPane.showMessageDialog(null, 
-							rm.getString("msg.role.modify.error"), 
-							rm.getString("msg.error"), 
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		}
-	}
-
-	@Action
-	public void copyRole()
-	{
-		int row = sysRoleTable.getSelectedRow();
-		if(row == -1)
-		{
-			return;
-		}
-		Role srcRole = ((SysRoleTableModel)sysRoleTable.getModel()).getRoleAt(sysRoleTable.convertRowIndexToModel(row));
-		SysRoleEditor editor = new SysRoleEditor();
-		if(editor.showDialog(srcRole.clone()))
-		{
-			Role newRole = editor.getRole();
-			// 添加角色
-			ProcessData out = OmcProcessor.process(Command.user, 
-					Command.addSysRole, newRole);
-			if(out.getState() == OmcConstants.coes_success)
-			{
-				// 添加成功
-				newRole.setId((Integer)out.getData());
-				((SysRoleTableModel)sysRoleTable.getModel()).addRole(newRole);
-				JOptionPane.showMessageDialog(null, 
-						rm.getString("msg.role.new.success"), 
-						rm.getString("msg.prompt"), 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else
-			{
-				// 添加失败
-				if(out.getState() != OmcConstants.coes_failure)
-				{
-					showErrorMessage(newRole, out.getState());
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, 
-							rm.getString("msg.role.new.error"), 
-							rm.getString("msg.error"), 
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
+//			ProcessData out = OmcProcessor.process(Command.user, 
+//					Command.modifySysRole, newRole);
+//			if(out.getState() == OmcConstants.coes_success)
+//			{
+//				// 修改成功
+//				((SysRoleTableModel)sysRoleTable.getModel()).updateRole(newRole);
+//				JOptionPane.showMessageDialog(null, 
+//						rm.getString("msg.role.modify.success"), 
+//						rm.getString("msg.prompt"), 
+//						JOptionPane.INFORMATION_MESSAGE);
+//			}
+//			else
+//			{
+//				// 修改失败
+//				if(out.getState() != OmcConstants.coes_failure)
+//				{
+//					showErrorMessage(newRole, out.getState());
+//				}
+//				else
+//				{				
+//					JOptionPane.showMessageDialog(null, 
+//							rm.getString("msg.role.modify.error"), 
+//							rm.getString("msg.error"), 
+//							JOptionPane.ERROR_MESSAGE);
+//				}
+//			}
 		}
 	}
 
@@ -583,32 +502,32 @@ public class SysRoleMgmt extends javax.swing.JPanel
 			return;
 		}
 		// 删除角色
-		ProcessData out = OmcProcessor.process(Command.user, 
-				Command.removeSysRole, srcRole.getId());
-		if(out.getState() == OmcConstants.coes_success)
-		{
-			// 删除成功
-			((SysRoleTableModel)sysRoleTable.getModel()).removeRole(srcRole);
-			JOptionPane.showMessageDialog(null, 
-					rm.getString("msg.role.remove.success"), 
-					rm.getString("msg.prompt"), 
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-		else
-		{
-			// 删除失败
-			if(out.getState() != OmcConstants.coes_failure)
-			{
-				showErrorMessage(srcRole, out.getState());
-			}
-			else
-			{			
-				JOptionPane.showMessageDialog(null, 
-						rm.getString("msg.role.remove.error"), 
-						rm.getString("msg.error"), 
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
+//		ProcessData out = OmcProcessor.process(Command.user, 
+//				Command.removeSysRole, srcRole.getId());
+//		if(out.getState() == OmcConstants.coes_success)
+//		{
+//			// 删除成功
+//			((SysRoleTableModel)sysRoleTable.getModel()).removeRole(srcRole);
+//			JOptionPane.showMessageDialog(null, 
+//					rm.getString("msg.role.remove.success"), 
+//					rm.getString("msg.prompt"), 
+//					JOptionPane.INFORMATION_MESSAGE);
+//		}
+//		else
+//		{
+//			// 删除失败
+//			if(out.getState() != OmcConstants.coes_failure)
+//			{
+//				showErrorMessage(srcRole, out.getState());
+//			}
+//			else
+//			{			
+//				JOptionPane.showMessageDialog(null, 
+//						rm.getString("msg.role.remove.error"), 
+//						rm.getString("msg.error"), 
+//						JOptionPane.ERROR_MESSAGE);
+//			}
+//		}
 	}
 
 	@Action
@@ -652,7 +571,6 @@ public class SysRoleMgmt extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnExit;

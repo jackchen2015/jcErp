@@ -9,20 +9,14 @@
  * Created on 2014-5-27, 18:04:19
  */
 
-package com.hongxin.omc.ui.user;
+package prj.ui.user;
 
 import com.hongxin.component.ComponentUtil;
-import com.hongxin.omc.operation.Command;
-import com.hongxin.omc.operation.OmcOperationGlue;
-import com.hongxin.omc.ui.OmcPreferences;
-import com.hongxin.omc.ui.common.NodeIndex;
 import com.hongxin.saf.AsynBlockTask;
 import com.hongxin.saf.SingleFrameApplication;
-import com.hongxin.speed.core.ProcessCallback;
-import com.hongxin.speed.core.ProcessData;
-import com.hongxin.speed.core.SpeedUtil;
 import com.hongxin.util.GUIUtils;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -67,63 +61,6 @@ public class UserSelectionPanel extends javax.swing.JPanel
 	}
 
 	/**
-	 * 获取用户数据任务实现。
-	 */
-	private class AcquireUserDataTask extends AsynBlockTask<Object, Void> implements ProcessCallback
-	{
-		/**
-		 * 操作结果。
-		 */
-		OmcOperationGlue result;
-		
-		AcquireUserDataTask()
-		{
-			// Runs on the EDT.  Copy GUI state that
-			// doInBackground() depends on from parameters
-			// to CommitTask fields, here.
-			super(Application.getInstance(), OmcPreferences.getInstance().getInteger("sys.asyn.timeout", 30000));
-			// 设置任务标题
-			setTitle(SpeedUtil.getCommandName(Command.user, Command.getAllUsers));
-		}
-
-		@Override
-		protected Object doInBackground()
-		{
-			// 异步执行命令序列
-			OmcOperationGlue glue = new OmcOperationGlue(this);
-			glue.addOperation(Command.user, Command.getAllUserGroups, true, null);
-			glue.addOperation(Command.user, Command.getAllUsers, true, null);
-			// 开始执行
-			glue.start();
-			// 阻塞等待
-			waitForReady();
-			return null;  // return your result
-		}
-
-		@Override
-		public void processCompleted(ProcessData out)
-		{
-			result = (OmcOperationGlue)out.getData();
-			// 任务结束
-			setTaskFinished(true);
-		}
-		
-		@Override
-		protected void succeeded(Object value)
-		{
-			// 获取命令结果
-			final ProcessData result1 =
-					result.getResult(Command.user, Command.getAllUserGroups);
-			final ProcessData result2 =
-					result.getResult(Command.user, Command.getAllUsers);
-			// 显示用户列表
-			((UserSelectionTreeTableModel)userTable.getTreeTableModel()).initModel((List)result1.getData(), (List)result2.getData());
-			((UserSelectionTreeTableModel)userTable.getTreeTableModel()).setSelectedUser(listSelectedUser);
-			userTable.expandAll();
-		}
-	}
-	
-	/**
 	 * 显示界面。
 	 * @param listUserId 选择用户id列表
 	 * @return 选择用户id列表
@@ -132,8 +69,14 @@ public class UserSelectionPanel extends javax.swing.JPanel
 	{
 		this.listSelectedUser = listUserId;
 		// 查询用户信息
-		AcquireUserDataTask task = new AcquireUserDataTask();
-		Application.getInstance().getContext().getTaskService().execute(task);
+//		AcquireUserDataTask task = new AcquireUserDataTask();
+//		Application.getInstance().getContext().getTaskService().execute(task);
+			// 显示用户列表
+		List allGrps = new ArrayList();
+		List allUsrs = new ArrayList();
+		((UserSelectionTreeTableModel)userTable.getTreeTableModel()).initModel(allGrps, allUsrs);
+		((UserSelectionTreeTableModel)userTable.getTreeTableModel()).setSelectedUser(listSelectedUser);
+
 		dialog = new JDialog(SingleFrameApplication.getInstance().getMainFrame(), true);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setName(getName());
