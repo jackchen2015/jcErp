@@ -26,12 +26,13 @@ import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 import prj.PrjApp;
 import prj.ui.basic.DefaultDataExportTask;
+import prj.user.UserPurview;
 import prj.user.po.Role;
 import util.SQLiteCRUD;
 
 /**
  * 角色编辑界面。
- * @author fanhuigang
+ * @author chenwei
  */
 public class SysRoleEditor extends javax.swing.JPanel
 {
@@ -195,7 +196,7 @@ public class SysRoleEditor extends javax.swing.JPanel
 				// 权限列表
 				int func = source.getListFunction().get(indicator - 2);
 //				String funcName = String.format("%s/%s", OmcDictionary.getInstance().sys_getItemAlias(func),OmcDictionary.getInstance().sys_getNameById(func));
-				String funcName = "a";
+				String funcName = String.format("%s/%s", UserPurview.getInstance().getPurview(func).getGroup(),UserPurview.getInstance().getPurview(func).getName());
 				return new String[] { rm.getString("msg.role.func"), funcName };
 			}
 		}

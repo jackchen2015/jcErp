@@ -71,6 +71,9 @@
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="userTable" noResource="true"/>
+            <Property name="treeCellRenderer" type="javax.swing.tree.TreeCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new UserTreeCellRenderer()" type="code"/>
+            </Property>
             <Property name="treeTableModel" type="org.jdesktop.swingx.treetable.TreeTableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="new UserTableModel(new DefaultMutableTreeTableNode(&quot;root&quot;))" type="code"/>
             </Property>

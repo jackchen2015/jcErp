@@ -39,6 +39,7 @@ import prj.ui.ObjectDetailsPanel;
 import prj.ui.RtSceneSTPanel;
 import prj.ui.StylePartPanel;
 import prj.ui.WorkLevelPanel;
+import prj.ui.mts.MtsModule;
 import prj.ui.user.UserManage;
 import prj.ui.user.UserModule;
 import prj.user.UserPurview;
@@ -391,9 +392,6 @@ public class PrjView extends SingleFrameView {
 			application.addStaticView(Constants.VIEW_RTSCENEST,
 					"实时信息", rm.getIcon("image.boardState"),
 					new RtSceneSTPanel(), Direction.DOWN);
-			application.addStaticView(6,
-					"实时信息1", rm.getIcon("image.boardState"),
-					new RtSceneSTPanel(), Direction.DOWN);
 		}
 //		if(hasPurview(UserPurview.View_OpenScene))
 //		{
@@ -471,7 +469,6 @@ public class PrjView extends SingleFrameView {
 			centerWindow = getTabWindow(centerWindow);
 //			centerWindow.addTab(vm.getView(Constants.VIEW_DASHBOARD));
 			centerWindow.addTab(vm.getView(Constants.VIEW_RTSCENEST));
-			centerWindow.addTab(vm.getView(6));
 		}
 		
 		
@@ -879,22 +876,27 @@ public class PrjView extends SingleFrameView {
         jMenu3.setText(resourceMap.getString("jMenu3.text")); // NOI18N
         jMenu3.setName("jMenu3"); // NOI18N
 
+        jMenuItem19.setAction(actionMap.get("showCcfk")); // NOI18N
         jMenuItem19.setText(resourceMap.getString("jMenuItem19.text")); // NOI18N
         jMenuItem19.setName("jMenuItem19"); // NOI18N
         jMenu3.add(jMenuItem19);
 
+        jMenuItem20.setAction(actionMap.get("showCjxc")); // NOI18N
         jMenuItem20.setText(resourceMap.getString("jMenuItem20.text")); // NOI18N
         jMenuItem20.setName("jMenuItem20"); // NOI18N
         jMenu3.add(jMenuItem20);
 
+        jMenuItem22.setAction(actionMap.get("showCjcnjx")); // NOI18N
         jMenuItem22.setText(resourceMap.getString("jMenuItem22.text")); // NOI18N
         jMenuItem22.setName("jMenuItem22"); // NOI18N
         jMenu3.add(jMenuItem22);
 
+        jMenuItem23.setAction(actionMap.get("showDeviceRate")); // NOI18N
         jMenuItem23.setText(resourceMap.getString("jMenuItem23.text")); // NOI18N
         jMenuItem23.setName("jMenuItem23"); // NOI18N
         jMenu3.add(jMenuItem23);
 
+        jMenuItem24.setAction(actionMap.get("showStaffWageAnalysis")); // NOI18N
         jMenuItem24.setText(resourceMap.getString("jMenuItem24.text")); // NOI18N
         jMenuItem24.setName("jMenuItem24"); // NOI18N
         jMenu3.add(jMenuItem24);
@@ -1248,6 +1250,41 @@ public class PrjView extends SingleFrameView {
 		}
 		catch(Exception exp)
 		{}		
+	}
+
+	@Action
+	public void showCcfk()
+	{
+		MtsModule mm = ServiceLoader.load(MtsModule.class).iterator().next();
+		mm.showCcfkDialog();
+	}
+
+	@Action
+	public void showCjxc()
+	{
+		MtsModule mm = ServiceLoader.load(MtsModule.class).iterator().next();
+		mm.showCjxcDialog();
+	}
+
+	@Action
+	public void showCjcnjx()
+	{
+		MtsModule mm = ServiceLoader.load(MtsModule.class).iterator().next();
+		mm.showCjcnDialog();
+	}
+
+	@Action
+	public void showDeviceRate()
+	{
+		MtsModule mm = ServiceLoader.load(MtsModule.class).iterator().next();
+		mm.showDeviceRateDialog();
+	}
+
+	@Action
+	public void showStaffWageAnalysis()
+	{
+		MtsModule mm = ServiceLoader.load(MtsModule.class).iterator().next();
+		mm.showStaffWageAnalysisDialog();
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

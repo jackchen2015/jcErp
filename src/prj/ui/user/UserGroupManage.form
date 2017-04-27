@@ -134,11 +134,6 @@
             <Property name="name" type="java.lang.String" value="separator1" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JToolBar$Separator" name="separator2">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="separator2" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btnExport">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">

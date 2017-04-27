@@ -20,7 +20,7 @@ import prj.user.UserPurview;
 
 /**
  * 角色权限tree组件。
- * @author fanhuigang
+ * @author chenwei
  * Created on 2015-2-11, 8:38:58
  */
 public class SysRoleFuncTree extends CheckBoxTree
@@ -163,8 +163,7 @@ public class SysRoleFuncTree extends CheckBoxTree
 			}
 			else if(node.getUserObject() instanceof Integer)
 			{
-//				return OmcDictionary.getInstance().sys_getNameById((Integer)node.getUserObject());
-				return "";
+				return UserPurview.getInstance().getPurview(Integer.parseInt(node.getUserObject()+"")).getName();
 			}
 		}
 		return super.convertValueToText(value, selected, expanded, leaf, row, hasFocus);

@@ -31,4 +31,10 @@ public class Constants
 	public final static int DYNAMVIEW_TOPOSCENE = 3;
 	public final static int VIEW_PROPERTY = 4;
 	public final static int VIEW_RTSCENEST = 5;
+	
+	public final static int VIEW_CCFK = 6;
+	public final static int VIEW_CJXC = 7;
+	public final static int VIEW_CJCNJX = 8;
+	public final static int VIEW_DEVICERATE = 9;
+	public final static int VIEW_STAFFWAGEANALYSIS = 10;
 }

@@ -5,6 +5,7 @@
  */
 package prj.ui;
 
+import com.hongxin.component.ComponentUtil;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JDialog;
@@ -66,7 +67,7 @@ public class StylePartPanel extends javax.swing.JPanel
     {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = ComponentUtil.createTable(true, false);
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();

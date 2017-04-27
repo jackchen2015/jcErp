@@ -273,30 +273,45 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem19">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="showCcfk" methodName="showCcfk"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem19.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem19" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem20">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="showCjxc" methodName="showCjxc"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem20.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem20" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem22">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="showCjcnjx" methodName="showCjcnjx"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem22.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem22" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem23">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="showDeviceRate" methodName="showDeviceRate"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem23.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem23" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem24">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="showStaffWageAnalysis" methodName="showStaffWageAnalysis"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem24.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem24" noResource="true"/>
               </Properties>

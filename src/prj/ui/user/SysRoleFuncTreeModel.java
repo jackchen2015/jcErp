@@ -16,7 +16,7 @@ import prj.user.UserPurview;
 
 /**
  * 角色权限tree模型。
- * @author fanhuigang
+ * @author chenwei
  * Created on 2015-2-11, 8:52:24
  */
 public class SysRoleFuncTreeModel extends DefaultTreeModel

@@ -18,6 +18,7 @@ import com.hongxin.saf.SingleFrameApplication;
 import com.hongxin.util.GUIUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentListener;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
@@ -131,9 +133,9 @@ public class UserManage extends javax.swing.JPanel
 	{
 		// 权限控制
 //		PrivilegeController.checkPrivilege(this.getClass(), this, this);
-//		onUserIcon = rm.getIcon("user.online.icon");
-//		offUserIcon = rm.getIcon("user.offline.icon");
-//		userGroupIcon = rm.getIcon("userGroup.icon");
+		onUserIcon = rm.getIcon("user.online.icon");
+		offUserIcon = rm.getIcon("user.offline.icon");
+		userGroupIcon = rm.getIcon("userGroup.icon");
 		// 获得用户组、用户信息
 		getAllUserInfo();
 		// 文档事件
@@ -816,6 +818,7 @@ public class UserManage extends javax.swing.JPanel
 
         userTable.setEditable(false);
         userTable.setName("userTable"); // NOI18N
+        userTable.setTreeCellRenderer(new UserTreeCellRenderer());
         userTable.setTreeTableModel(new UserTableModel(new DefaultMutableTreeTableNode("root")));
         tableScrollPane.setViewportView(userTable);
 
@@ -898,7 +901,70 @@ public class UserManage extends javax.swing.JPanel
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
+	/**
+	 * 树节点的渲染器
+	 * 将用户状态小图标加入到用户名前，使用不同的图标表示用户的在线状态
+	 */
+	private class UserTreeCellRenderer extends DefaultTreeCellRenderer
+	{
+		@Override
+		public Component getTreeCellRendererComponent(javax.swing.JTree tree,
+				Object value, boolean sel,
+				boolean expanded, boolean leaf, int row,
+				boolean hasFocus)
+		{
+			super.getTreeCellRendererComponent(tree, value, sel,
+					expanded, leaf, row, hasFocus);
+			//叶子节点
+			if(leaf)
+			{
+				//获得当前节点
+				DefaultMutableTreeTableNode node =
+						(DefaultMutableTreeTableNode)value;
+				//获得节点属性对象
+				if(node.getUserObject() instanceof User)
+				{
+					User user = (User)node.getUserObject();
+					if(user != null)
+					{
+//						switch(user.getStatus())
+//						{
+//							//在线
+//							case OmcConstants.us_online:
+//								setText(user.getName());
+//								setIcon(onUserIcon);
+//								break;
+//							//不在线
+//							case OmcConstants.us_offline:
+//								setText(user.getName());
+//								setIcon(offUserIcon);
+//								break;
+//						}
+						setText(user.getName());
+						setIcon(onUserIcon);
+					}
+					
+				}
+			}
+			//获得当前节点
+			DefaultMutableTreeTableNode node =
+					(DefaultMutableTreeTableNode)value;
+			//用户组对象
+			if(node.getUserObject() instanceof UserGroup)
+			{
+				//获得用户对象
+				UserGroup user = (UserGroup)node.getUserObject();
+				//判断是否不为Null
+				if(user != null)
+				{
+					setText(user.getName());
+					setIcon(userGroupIcon);
+				}
+			}
+			return this;
+		}
+	}
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddUser;
     private javax.swing.JButton btnDeleteUser;

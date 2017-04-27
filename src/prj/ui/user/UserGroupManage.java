@@ -21,6 +21,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import com.hongxin.saf.AsynBlockTask;
 import com.hongxin.saf.SingleFrameApplication;
+import com.hongxin.util.GUIUtils;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
@@ -28,9 +29,11 @@ import java.util.Collections;
 import javax.swing.table.AbstractTableModel;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.Task;
+import prj.PrjApp;
 import prj.ui.basic.DefaultDataExportTask;
 import prj.user.po.Role;
 import prj.user.po.UserGroup;
+import util.SQLiteCRUD;
 
 /**
  * 用户组管理,实现新增/修改/删除/锁定/复制用户组等基本操作
@@ -82,6 +85,7 @@ public class UserGroupManage extends javax.swing.JPanel
 		um.dialog.setTitle(um.rm.getString("form.title"));
 		um.dialog.setLayout(new BorderLayout());
 		um.dialog.add(um, BorderLayout.CENTER);
+		GUIUtils.addHideAction(um.dialog);
 		um.dialog.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -121,10 +125,34 @@ public class UserGroupManage extends javax.swing.JPanel
 //		Task acquireTask = new AcquireUserDataTask(Application.getInstance());
 //		Application.getInstance().getContext().getTaskService().
 //				execute(acquireTask);
-		List allGrps = new ArrayList();
-		List allRoles = new ArrayList();
-			createUserGroupTable(allGrps,
-					allRoles);		
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		List<List> grpresults = sqlOpt.select("user_group", new String[]{"id","groupname","groupdesc","grouptype","roleid"});
+		List<List> roleresults = sqlOpt.select("user_role", new String[]{"id","rolename","roledesc"});
+
+		List<UserGroup> userGrpList = new ArrayList();
+		List<Role> roleList = new ArrayList();
+		for(List<String> grp:grpresults)
+		{
+			UserGroup ug = new UserGroup();
+			ug.setId(Integer.parseInt(grp.get(0)));
+			ug.setName(grp.get(1));
+			ug.setDescription(grp.get(2));
+			List<Integer> roleid = new ArrayList<Integer>();
+			roleid.add(Integer.parseInt(grp.get(3)));
+			ug.setListRoleId(roleid);
+			userGrpList.add(ug);
+		}
+		
+		for(List<String> role:roleresults)
+		{
+			Role r = new Role();
+			r.setId(Integer.parseInt(role.get(0)));
+			r.setName(role.get(1));
+			r.setDescription(role.get(2));
+			roleList.add(r);
+		}
+		createUserGroupTable(userGrpList,
+					roleList);		
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="查询用户组操作的处理器">
@@ -466,7 +494,6 @@ public class UserGroupManage extends javax.swing.JPanel
         btnEdit = ComponentUtil.createToolBarButton();
         btnDelete = ComponentUtil.createToolBarButton();
         separator1 = new javax.swing.JToolBar.Separator();
-        separator2 = new javax.swing.JToolBar.Separator();
         btnExport = ComponentUtil.createToolBarButton();
         btnQuit = new javax.swing.JButton();
 
@@ -503,9 +530,6 @@ public class UserGroupManage extends javax.swing.JPanel
 
         separator1.setName("separator1"); // NOI18N
         toolBar.add(separator1);
-
-        separator2.setName("separator2"); // NOI18N
-        toolBar.add(separator2);
 
         btnExport.setAction(actionMap.get("export")); // NOI18N
         btnExport.setFocusable(false);
@@ -746,7 +770,6 @@ public class UserGroupManage extends javax.swing.JPanel
     private javax.swing.JButton btnExport;
     private javax.swing.JButton btnQuit;
     private javax.swing.JToolBar.Separator separator1;
-    private javax.swing.JToolBar.Separator separator2;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JToolBar toolBar;
     private UserGroupTableModel userGroupModel;
