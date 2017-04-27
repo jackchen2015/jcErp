@@ -779,10 +779,12 @@ public class PrjView extends SingleFrameView {
         jMenu7.setText(resourceMap.getString("jMenu7.text")); // NOI18N
         jMenu7.setName("jMenu7"); // NOI18N
 
+        jMenuItem50.setAction(actionMap.get("sysRoleMgmt")); // NOI18N
         jMenuItem50.setText(resourceMap.getString("jMenuItem50.text")); // NOI18N
         jMenuItem50.setName("jMenuItem50"); // NOI18N
         jMenu7.add(jMenuItem50);
 
+        jMenuItem49.setAction(actionMap.get("userGrpManage")); // NOI18N
         jMenuItem49.setText(resourceMap.getString("jMenuItem49.text")); // NOI18N
         jMenuItem49.setName("jMenuItem49"); // NOI18N
         jMenu7.add(jMenuItem49);
@@ -1222,6 +1224,30 @@ public class PrjView extends SingleFrameView {
 		{
 			exp.printStackTrace();
 		}
+	}
+
+	@Action
+	public void userGrpManage()
+	{
+		try
+		{
+			UserModule um = ServiceLoader.load(UserModule.class).iterator().next();
+			um.showUserGroupMgmt();
+		}
+		catch(Exception exp)
+		{}		
+	}
+
+	@Action
+	public void sysRoleMgmt()
+	{
+		try
+		{
+			UserModule um = ServiceLoader.load(UserModule.class).iterator().next();
+			um.showRoleMgmt();
+		}
+		catch(Exception exp)
+		{}		
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

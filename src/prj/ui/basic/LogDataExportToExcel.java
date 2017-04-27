@@ -4,7 +4,6 @@
  */
 package prj.ui.basic;
 
-import com.hongxin.omc.ui.util.FileDialogUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

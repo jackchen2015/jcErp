@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.Icon;
@@ -38,10 +39,12 @@ import org.jdesktop.swingx.decorator.SearchPredicate;
 import org.jdesktop.swingx.search.PatternModel;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
+import prj.PrjApp;
 import prj.ui.basic.DefaultDataExportTask;
 import prj.user.po.Role;
 import prj.user.po.User;
 import prj.user.po.UserGroup;
+import util.SQLiteCRUD;
 
 /**
  * 用户管理界面，实现新增/删除/编辑/锁定/设备用户/强制下线用户的基本操作
@@ -141,36 +144,80 @@ public class UserManage extends javax.swing.JPanel
 
 	private void getAllUserInfo()
 	{
-			List userGrpList = new ArrayList();
-			// 用户组
-			if(userGrpList != null)
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		List<List> grpresults = sqlOpt.select("user_group", new String[]{"id","groupname","groupdesc","grouptype","roleid"});
+		List<List> userresults = sqlOpt.select("user_user", new String[]{"id","number","username","password","enusername","nameusebefore","sex","idnumber"});
+		List<List> roleresults = sqlOpt.select("user_role", new String[]{"id","rolename","roledesc"});
+		
+		List<UserGroup> userGrpList = new ArrayList();
+		List<User> userList = new ArrayList();
+		List<Role> roleList = new ArrayList();
+		for(List<String> grp:grpresults)
+		{
+			UserGroup ug = new UserGroup();
+			ug.setId(Integer.parseInt(grp.get(0)));
+			ug.setName(grp.get(1));
+			ug.setDescription(grp.get(2));
+			List<Integer> roleid = new ArrayList<Integer>();
+			roleid.add(Integer.parseInt(grp.get(3)));
+			ug.setListRoleId(roleid);
+			userGrpList.add(ug);
+		}
+		
+		for(List<String> usr:userresults)
+		{
+			User u = new User();
+			u.setId(Integer.parseInt(usr.get(0)));
+			u.setAliasName(usr.get(1));
+			u.setName(usr.get(2));
+			u.setPassword(usr.get(3));
+			u.setRealName(usr.get(4));
+			List<String> results = sqlOpt.selectByCondition("user_groupuser", "groupid", "userid", usr.get(0));
+			List<Integer> gid = new ArrayList<Integer>();
+			for(String r:results)
 			{
-				listUserGroup.clear();
-				listUserGroup.addAll(userGrpList);
+				gid.add(Integer.parseInt(r));
 			}
-			List userList = new ArrayList();
-			// 用户
-			if(userList != null)
+			u.setGroups(gid);
+			userList.add(u);
+		}
+		
+		for(List<String> role:roleresults)
+		{
+			Role r = new Role();
+			r.setId(Integer.parseInt(role.get(0)));
+			r.setName(role.get(1));
+			r.setDescription(role.get(2));
+			roleList.add(r);
+		}
+
+		// 用户组
+		if(userGrpList != null)
+		{
+			listUserGroup.clear();
+			listUserGroup.addAll(userGrpList);
+		}
+		// 用户
+		if(userList != null)
+		{
+			listUser.clear();
+			listUser.addAll(userList);
+		}
+		// 角色
+		if(roleList != null)
+		{
+			listRole.clear();
+			listRole.addAll(roleList);
+		}
+		javax.swing.SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
 			{
-				listUser.clear();
-				listUser.addAll(userList);
+				// 显示用户组列表
+				createUserTable();
 			}
-			List roleList = new ArrayList();
-			// 角色
-			if(roleList != null)
-			{
-				listRole.clear();
-				listRole.addAll(roleList);
-			}
-			javax.swing.SwingUtilities.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					// 显示用户组列表
-					createUserTable();
-				}
-			});
+		});
 
 	
 	}

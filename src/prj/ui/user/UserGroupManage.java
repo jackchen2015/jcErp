@@ -99,7 +99,7 @@ public class UserGroupManage extends javax.swing.JPanel
 	 */
 	private void initialize()
 	{
-		PrivilegeController.checkPrivilege(this.getClass(), this, this);
+//		PrivilegeController.checkPrivilege(this.getClass(), this, this);
 		// 获取用户组信息
 		getAllUserGroupMap();
 		// 注册系统信息回调方法

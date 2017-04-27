@@ -16,6 +16,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import org.jdesktop.application.Application;
+import prj.user.UserPurview;
 
 /**
  * 角色权限tree组件。
@@ -185,7 +186,7 @@ public class SysRoleFuncTree extends CheckBoxTree
 			if(node.getUserObject() instanceof Integer)
 			{
 				setIcon(Application.getInstance().getContext().getResourceMap().getIcon("image.gear"));
-				setText(node.toString());
+				setText(UserPurview.getInstance().getPurview(Integer.parseInt(node.getUserObject()+"")).getName());
 			}
 			else if(node.getUserObject() instanceof String)
 			{

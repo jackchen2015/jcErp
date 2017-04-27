@@ -169,6 +169,36 @@ public class SQLiteCRUD {
 		return result;
 	}
 	
+	public List<String> selectByCondition(String table, String field, String keyField, String keyValue)
+	{
+		List<String> result = new ArrayList<String>();
+        Statement stmt = null ;
+		ResultSet rs =  null;
+		StringBuffer sb = new StringBuffer();
+
+        String sql = "select "+ field +" from " + table + " where "+keyField+" = "+keyValue;
+        try{
+            stmt = this.connection.createStatement();
+            rs = stmt.executeQuery(sql);
+        }catch (Exception e) {
+            System.out.println( e.getLocalizedMessage());
+            connectionRollback(connection) ;    
+            return null; 
+        }
+		try
+		{
+			while(rs.next())
+			{
+				result.add(rs.getString(field));
+			}
+		}
+		catch(SQLException ex)
+		{
+			Logger.getLogger(SQLiteCRUD.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return result;		
+	}
+	
 	public int getMaxID(String tableName)
 	{
 		Statement stmt = null ;

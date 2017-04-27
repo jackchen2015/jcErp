@@ -3,7 +3,7 @@
  * Wuhan, Hubei, China. All rights reserved.
  */
 
-package com.hongxin.omc.ui.util;
+package prj.ui.basic;
 
 import com.hongxin.component.FileUtil;
 import java.awt.Component;

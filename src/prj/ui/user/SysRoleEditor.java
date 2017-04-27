@@ -20,13 +20,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
+import prj.PrjApp;
 import prj.ui.basic.DefaultDataExportTask;
 import prj.user.po.Role;
+import util.SQLiteCRUD;
 
 /**
  * 角色编辑界面。
@@ -73,12 +74,19 @@ public class SysRoleEditor extends javax.swing.JPanel
 			tfName.setText(role.getName());
 			tfDesc.setText(role.getDescription());
 			// 加载角色权限
+			SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+			List<String> results = sqlOpt.selectByCondition("user_roleaction", "aid", "rid", role.getId()+"");
+			List<Integer> actions = new ArrayList<Integer>();
+			for(String re:results)
+			{
+				actions.add(Integer.parseInt(re));
+			}
 //			ProcessData out = OmcProcessor.process(Command.user, 
 //					Command.getSysRole, role.getId());
 //			if(out.getData() != null)
 //			{
-//				role.setListFunction((List)out.getData());
-//				sysRoleFuncTree.setSelectedFunction((List)out.getData());
+			role.setListFunction(actions);
+			sysRoleFuncTree.setSelectedFunction(actions);
 //			}
 		}
 	}

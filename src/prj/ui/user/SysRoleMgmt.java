@@ -24,8 +24,10 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
+import prj.PrjApp;
 import prj.ui.basic.DefaultDataExportTask;
 import prj.user.po.Role;
+import util.SQLiteCRUD;
 
 /**
  * 角色管理界面。
@@ -63,6 +65,9 @@ public class SysRoleMgmt extends javax.swing.JPanel
 	 */
 	private void initSysRole()
 	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		List<List> results = sqlOpt.select("user_role", new String[]{"id","roleName","roledesc"});
+		
 //		OmcProcessor.process(Command.user, Command.listSysRole, 
 //		null, new ProcessCallback()
 //		{
@@ -82,7 +87,16 @@ public class SysRoleMgmt extends javax.swing.JPanel
 //				}
 //			}	
 //		});
-		((SysRoleTableModel)sysRoleTable.getModel()).initModel(new ArrayList());
+		List<Role> roles = new ArrayList();
+		for(List<String> re:results)
+		{
+			Role r = new Role();
+			r.setId(Integer.parseInt(re.get(0)));
+			r.setName(re.get(1));
+			r.setDescription(re.get(2));
+			roles.add(r);
+		}
+		((SysRoleTableModel)sysRoleTable.getModel()).initModel(roles);
 	}
 	
 	/**

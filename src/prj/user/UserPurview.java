@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import prj.PrjApp;
+import util.SQLiteCRUD;
 
 /**
  * 用户权限。
@@ -466,6 +468,8 @@ public class UserPurview
 		if(purviews == null)
 		{
 			purviews = new TreeMap<Integer, Purview>();
+			SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+			List<List> results = sqlOpt.select("user_action", new String[]{"id","fullpath","actionname","actiondesc"});
 //			List<SystemItem> listItem = OmcDictionary.getInstance().sys_getItemsByType(OmcDictionary.userPurview);
 //			if(listItem != null)
 //			{
@@ -478,6 +482,15 @@ public class UserPurview
 //					purviews.put(item.getItemId(), purview);
 //				}
 //			}
+			for(List<String> re:results)
+			{
+				Purview purview = new Purview();
+				int id = Integer.parseInt(re.get(0));
+				purview.setId(id);
+				purview.setGroup(re.get(1));
+				purview.setName(re.get(2));
+				purviews.put(id, purview);				
+			}
 		}
 	}
 	

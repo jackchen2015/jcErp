@@ -107,12 +107,18 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem50">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="sysRoleMgmt" methodName="sysRoleMgmt"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem50.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem50" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem49">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="prj.PrjView" id="userGrpManage" methodName="userGrpManage"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem49.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem49" noResource="true"/>
               </Properties>
