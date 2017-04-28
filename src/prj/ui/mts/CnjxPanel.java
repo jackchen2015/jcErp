@@ -81,6 +81,7 @@ public class CnjxPanel extends javax.swing.JPanel
 	private void initialize()
 	{
 		resourceMap = Application.getInstance().getContext().getResourceMap(CnjxPanel.class);
+		viewListener = new CnjxViewListener();
 	}
 	
 	private void clear()

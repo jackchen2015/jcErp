@@ -149,7 +149,6 @@
       <SubComponents>
         <Component class="com.hongxin.omc.ui.user.SysRoleFuncTree" name="sysRoleFuncTree">
           <Properties>
-            <Property name="checkBoxEnabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="sysRoleFuncTree" noResource="true"/>
             <Property name="rootVisible" type="boolean" value="false"/>
           </Properties>

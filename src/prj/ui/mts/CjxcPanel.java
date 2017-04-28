@@ -81,6 +81,7 @@ public class CjxcPanel extends javax.swing.JPanel
 	private void initialize()
 	{
 		resourceMap = Application.getInstance().getContext().getResourceMap(CjxcPanel.class);
+		viewListener = new CjxcViewListener();
 	}
 	
 	private void clear()

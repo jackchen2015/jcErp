@@ -30,7 +30,7 @@ public class PrjApp extends SingleFrameApplication {
 	private SQLiteCRUD slc;
 	private String drv = "org.sqlite.JDBC";
 
-	private String url = "jdbc:sqlite:src/erpdb.db";
+	private String url = "jdbc:sqlite:erpdb.db";
 
     /**
      * At startup create and show the main frame of the application.

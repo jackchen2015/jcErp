@@ -23,9 +23,11 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import org.jdesktop.application.Application;
+import prj.PrjApp;
 import prj.user.po.Role;
 import prj.user.po.User;
 import prj.user.po.UserGroup;
+import util.SQLiteCRUD;
 
 /**
  * 用户编辑界面，完成新增/修改用户信息的基本操作
@@ -603,9 +605,26 @@ public class UserEditor extends javax.swing.JDialog
 
 		userInfo.setWorkplace(workplace);
 		//isok = true;
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
 		if(!editMode)
 		{
 			// 新增用户操作
+			boolean result1 = sqlOpt.insert("user_user", new String[]{"number","username","password"}, new String[]{"233",userInfo.getName(), userInfo.getPassword()});
+			List<Integer> ugs = userInfo.getGroups();
+			boolean result2 = true;
+			for(Integer ug:ugs)
+			{
+				result2 = result2 && sqlOpt.insert("user_groupuser", new String[]{"groupid","userid"}, new String[]{ug+"",userInfo.getId()+""});
+			}
+			if(result1&&result2)
+			{
+					JOptionPane.showMessageDialog(this, 
+							rm.getString("mb.adduser.success"), 
+							rm.getString("mb.tip"), 
+							JOptionPane.INFORMATION_MESSAGE);
+					isok = true;
+					UserEditor.this.dispose();				
+			}
 //			ProcessData out = OmcProcessor.process(Command.user, 
 //					Command.addUser, userInfo);
 //			switch(out.getState())
@@ -666,6 +685,24 @@ public class UserEditor extends javax.swing.JDialog
 		else
 		{
 			// 编辑用户操作
+			boolean result1 = sqlOpt.update("user_user", userInfo.getId()+"", "id", new String[]{"number","username","password"}, new String[]{"233",userInfo.getName(), userInfo.getPassword()});
+			List<Integer> ugs = userInfo.getGroups();
+			boolean result2 = true;
+			for(Integer ug:ugs)
+			{
+				result2 = result2 && sqlOpt.update("user_groupuser", userInfo.getId()+"", "id", new String[]{"groupid","userid"}, new String[]{ug+"",userInfo.getId()+""});
+			}
+			if(result1&&result2)
+			{
+					JOptionPane.showMessageDialog(this, 
+							rm.getString("mb.edituser.success"), 
+							rm.getString("mb.tip"), 
+							JOptionPane.INFORMATION_MESSAGE);
+					isok = true;
+					UserEditor.this.dispose();				
+			}
+
+
 //			ProcessData out =
 //					OmcProcessor.process(Command.user, Command.modifyUser, userInfo);
 ////                0，	失败

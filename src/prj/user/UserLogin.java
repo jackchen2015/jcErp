@@ -11,12 +11,14 @@
 package prj.user;
 
 import java.io.File;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.event.EventListenerList;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import prj.PrjApp;
+import util.SQLiteCRUD;
 
 /**
  *
@@ -106,6 +108,22 @@ public class UserLogin extends javax.swing.JPanel
 		}
 	}
 
+	private boolean authenticate(String userName, String password)
+	{
+		SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+		List<String> results = sqlOpt.selectByCondition("user_user", "password", "username", "'"+userName+"'");
+		String dbpwd = "";
+		if(results.size()>0)
+		{
+			dbpwd = results.get(0);
+		}
+		if(dbpwd.equals(password))
+		{
+			return true;
+		}
+		return false;
+	}
+
 	private class LoginListenerImpl extends LoginAdapter
 	{
 		@Override
@@ -137,7 +155,8 @@ public class UserLogin extends javax.swing.JPanel
 //		}
 		fireLoginStarted(new LoginEvent(this).setUser(userName));
 //		if(UserDatabaseFactory.getInstance().authenticate(userName, password))
-		if(true)
+		boolean isSucc = authenticate(userName, password);
+		if(isSucc)
 		{
 			fireLoginSucceeded(new LoginEvent(this).setUser(userName));
 		}

@@ -265,7 +265,6 @@ public class SysRoleEditor extends javax.swing.JPanel
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        sysRoleFuncTree.setCheckBoxEnabled(false);
         sysRoleFuncTree.setName("sysRoleFuncTree"); // NOI18N
         sysRoleFuncTree.setRootVisible(false);
         jScrollPane1.setViewportView(sysRoleFuncTree);

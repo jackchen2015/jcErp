@@ -390,7 +390,7 @@ public class PrjView extends SingleFrameView {
 		if(!hasPurview(UserPurview.View_BoardState))
 		{
 			application.addStaticView(Constants.VIEW_RTSCENEST,
-					"实时信息", rm.getIcon("image.boardState"),
+					"全局预览", rm.getIcon("image.boardState"),
 					new RtSceneSTPanel(), Direction.DOWN);
 		}
 //		if(hasPurview(UserPurview.View_OpenScene))
@@ -551,7 +551,7 @@ public class PrjView extends SingleFrameView {
 		if(centerWindow != null)
 		{
 			rw.setWindow(new SplitWindow(false,
-					0.75f,
+					0.95f,
 					/*TOP*/
 					new SplitWindow(true, 0.25f, leftWindow, centerWindow),
 					/*BOTTOM*/
@@ -560,7 +560,7 @@ public class PrjView extends SingleFrameView {
 		else
 		{
 			rw.setWindow(new SplitWindow(false,
-					0.75f,
+					0.95f,
 					/*TOP*/
 					leftWindow,
 					/*BOTTOM*/

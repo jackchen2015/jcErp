@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import com.hongxin.util.GUIUtils;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -29,9 +30,11 @@ import javax.swing.JOptionPane;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.Task;
 import org.jdesktop.beansbinding.Validator;
+import prj.PrjApp;
 import prj.ui.basic.DefaultDataExportTask;
 import prj.user.po.Role;
 import prj.user.po.UserGroup;
+import util.SQLiteCRUD;
 
 /**
  * 用户组编辑界面，完成新增/修改用户组权限等信息的基本操作
@@ -160,11 +163,19 @@ public class UserGroupEditor extends javax.swing.JDialog
 			// 获取用户组详细信息
 //			ProcessData out = OmcProcessor.process(Command.user,
 //					Command.getUserGroupDetails, userGroupInfo.getId());
+			SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+			List<String> grpresults = sqlOpt.selectByCondition("user_group", "roleid", "id", userGroupInfo.getId()+"");
+			
 			UserGroup userGroup = new UserGroup();
+			if(grpresults.size()>0)
+			{
+				String first = grpresults.get(0);				
+				userGroup.setListRoleId(Arrays.asList(Integer.parseInt(first)));
+			}
 			// 不能使用copy方法
 			//userGroupInfo.copyFrom(userGroup);
 			userGroupInfo.setListRoleId(userGroup.getListRoleId());
-			userGroupInfo.setListGroupId(userGroup.getListGroupId());
+			userGroupInfo.setListGroupId(userGroup.getListGroupId());//设备列表
 		}
 		else
 		{
@@ -223,7 +234,14 @@ public class UserGroupEditor extends javax.swing.JDialog
 //			{
 //				sysRoleFuncTree.setSelectedFunction((List)out.getData());
 //			}
-			sysRoleFuncTree.setSelectedFunction(new ArrayList());
+			SQLiteCRUD sqlOpt = PrjApp.getApplication().getSQLiteCRUD();
+			List<String> results = sqlOpt.selectByCondition("user_roleaction", "aid", "rid", listSysRoleId.get(0)+"");
+			List<Integer> actions = new ArrayList<Integer>();
+			for(String re:results)
+			{
+				actions.add(Integer.parseInt(re));
+			}
+			sysRoleFuncTree.setSelectedFunction(actions);
 		}
 	}
 
